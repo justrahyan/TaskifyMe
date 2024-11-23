@@ -1,0 +1,324 @@
+/* Color Root */
+:root {
+  --primary: #277f57;
+  --secondary: #52bd95;
+  --tertiary: #eef4ef;
+  --white: #fff;
+  --dark: #494a4c;
+  --black: #0c0c0c;
+  --btn-detail: #12ca6e;
+  --btn-add: #3396d9;
+  --btn-delete: #ff0137;
+  --btn-print: #fec868;
+  --flag-low: #4aa81b;
+  --flag-mid: #ff7f00;
+  --flag-high: #e55069;
+  --bg-flag-low: #e2f1da;
+  --bg-flag-mid: #fff3e6;
+  --bg-flag-high: #fcf0f2;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: "Plus Jakarta Sans";
+}
+/* Aside Expand Size */
+aside.expand {
+  width: 75px;
+  min-width: 75px;
+}
+aside.expand .container ul li a span,
+aside.expand .container .top .logo h4 {
+  opacity: 0;
+  display: none;
+  transition: all 0.35s ease-in-out;
+}
+aside.expand .container {
+  width: 100%;
+  padding: 0.5rem;
+}
+aside.expand .container .top {
+  justify-content: center;
+  align-items: center;
+}
+aside.expand .container .top .logo {
+  opacity: 0;
+  display: none;
+  visibility: hidden;
+  pointer-events: none;
+  width: 0;
+  padding: 0;
+}
+aside.expand .container .top .toggle {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+aside.expand .container ul li a {
+  justify-content: center;
+}
+/* Aside Normal Size */
+aside {
+  box-shadow: rgba(149, 157, 165, 0.3) 0px 0px 24px;
+  width: 280px;
+  min-width: 280px;
+  z-index: 1000;
+  transition: all 0.35s ease-in-out;
+  height: 100vh;
+}
+aside .container {
+  width: 90%;
+  background-color: #fff;
+  padding: 0.5rem;
+}
+aside .container .top {
+  margin-bottom: 4rem;
+  height: 50px;
+}
+aside .container .top .logo {
+  width: 100%;
+  padding: 0.5rem;
+  text-decoration: none;
+  color: var(--dark);
+  transition: all 0.3s ease;
+}
+aside .container .top .logo h4 {
+  font-weight: 600;
+}
+aside .container .top .logo img {
+  width: 32px;
+  height: 32px;
+}
+aside .container .top .toggle {
+  width: 20%;
+  display: flex;
+  justify-content: end;
+  cursor: pointer;
+}
+aside .container .top .toggle img {
+  width: 26px;
+  height: 26px;
+}
+aside .container ul {
+  padding: 0;
+}
+aside .container ul li {
+  list-style-type: none;
+  width: 100%;
+}
+aside .container ul li a {
+  padding: 0.5rem;
+  border-radius: 14px;
+  text-decoration: none;
+  color: var(--dark);
+  font-weight: 500;
+  transition: all 0.35s ease-in-out;
+}
+aside .container ul li a span {
+  transition: all 0.35s ease-in-out;
+}
+aside .container ul li a.active {
+  background-color: var(--dark);
+  color: var(--white);
+}
+aside .container ul li :not(a.active) .icon-side {
+  box-shadow: rgba(149, 157, 165, 0.3) 0px 5px 5px;
+}
+aside .container ul li :not(a.active):hover {
+  background-color: #f5f5f5;
+}
+aside .container ul li a .icon-side {
+  width: 35px;
+  height: 35px;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--white);
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+aside .container ul li a .icon-side img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+section {
+  width: 100%;
+  height: 100vh;
+  padding: 1rem 2rem;
+  transition: all 0.25s ease-in-out;
+}
+section .container {
+  height: 100%;
+  min-width: 100%;
+  padding: 0;
+  margin: 0;
+}
+section .container header .container {
+  background-color: var(--white);
+  width: 100%;
+  height: auto;
+  padding: 0.5rem;
+  border-radius: 10px;
+  box-shadow: rgba(149, 157, 165, 0.3) 0px 0px 10px;
+}
+section .container header .container .notification {
+  width: 45px;
+  height: 45px;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+}
+section .container header .container .notification:hover {
+  background-color: #f5f5f5;
+}
+section .container header .container .notification img {
+  width: 70%;
+}
+section .container header .container .profile .btn-group .btn {
+  background-color: var(--white);
+}
+section .container header .container .profile .btn-group .btn:hover {
+  background-color: #f5f5f5;
+}
+section .container header .container .profile .btn-group .btn .profile-img {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+section .container header .container .profile .btn-group .btn .profile-img img {
+  width: 70%;
+}
+section .container header .container .profile .btn-group .dropdown-menu {
+  width: 300px;
+  height: max-content;
+}
+section .container header .container .profile .btn-group .dropdown-menu li {
+  padding: 0.25rem 1.25rem;
+}
+section
+  .container
+  header
+  .container
+  .profile
+  .btn-group
+  .dropdown-menu
+  li:not(.profile-pop):hover {
+  background-color: #f5f5f5;
+}
+section
+  .container
+  header
+  .container
+  .profile
+  .btn-group
+  .dropdown-menu
+  li.profile-pop
+  .icon-dropdown
+  img {
+  width: 80%;
+}
+section
+  .container
+  header
+  .container
+  .profile
+  .btn-group
+  .dropdown-menu
+  li.profile-pop
+  span {
+  font-size: 16px;
+}
+section
+  .container
+  header
+  .container
+  .profile
+  .btn-group
+  .dropdown-menu
+  li
+  .profile-menu {
+  font-size: 14px;
+}
+section .container header .container .profile .btn-group .dropdown-menu li a {
+  text-decoration: none;
+  color: var(--dark);
+}
+section
+  .container
+  header
+  .container
+  .profile
+  .btn-group
+  .dropdown-menu
+  li
+  .icon-dropdown {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+section
+  .container
+  header
+  .container
+  .profile
+  .btn-group
+  .dropdown-menu
+  li
+  .icon-dropdown
+  img {
+  width: 60%;
+}
+section .container .content {
+  padding: 1.5rem 0;
+}
+section .container .content .heading-page {
+  margin-bottom: 1rem;
+  height: 45px;
+}
+section .container .content .heading-page .line {
+  background-color: var(--primary);
+  width: 5px;
+  height: 32px;
+}
+section .container .content table {
+  width: 100%;
+}
+section .container .content table tr:first-child th {
+  padding: 0.5rem 1.25rem 1.25rem;
+}
+section .container .content table .text-truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+section .container .content table tr:not(:first-child) td {
+  padding: 0.5rem 1.25rem;
+}
+section .container .content table .btn-detail {
+  background-color: var(--btn-detail);
+  border: none;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+section .container .content table .btn-detail img {
+  width: 24px;
+  height: 24px;
+}
