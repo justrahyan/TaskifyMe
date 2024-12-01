@@ -56,37 +56,30 @@ section .container .content .heading-page .line {
   width: 5px;
   height: 32px;
 }
-section .container .content table {
+section .container .content .user-info .profile {
+  width: 30%;
+}
+section .container .content .user-info .profile img {
   width: 100%;
-  border-spacing: 0 10px;
-  border-collapse: separate;
 }
-section .container .content table tr.data {
-  box-shadow: rgba(149, 157, 165, 0.15) 0px 5px 10px;
-  height: 60px;
+section .container .content .user-info .profile .btn-picture {
+  background-color: var(--primary);
+  border: 0;
+  color: var(--white);
+  font-size: 14px;
 }
-section .container .content table tr:first-child th {
-  padding: 0.5rem 1.25rem 1.25rem;
+section .container .content .user-info .profile p {
+  font-size: 12px;
 }
-section .container .content table .text-truncate {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+section .container .content .user-info .information {
+  width: 100%;
 }
-section .container .content table tr:not(:first-child) td {
-  padding: 0.5rem 1.25rem;
+section .container .content .user-info .information table .btn-change {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
 }
-section .container .content table .btn-detail {
-  background-color: var(--btn-detail);
-  border: none;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-section .container .content table .btn-detail img {
-  width: 24px;
-  height: 24px;
+section .container .content .user-info .information table .btn-change:hover {
+  text-decoration: underline;
 }

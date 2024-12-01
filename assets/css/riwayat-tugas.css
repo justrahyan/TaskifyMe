@@ -76,8 +76,8 @@ section .container .content table .text-truncate {
 section .container .content table tr:not(:first-child) td {
   padding: 0.5rem 1.25rem;
 }
-section .container .content table .btn-detail {
-  background-color: var(--btn-detail);
+section .container .content table .btn-print {
+  background-color: var(--btn-print);
   border: none;
   width: 32px;
   height: 32px;
@@ -86,7 +86,7 @@ section .container .content table .btn-detail {
   justify-content: center;
   cursor: pointer;
 }
-section .container .content table .btn-detail img {
+section .container .content table .btn-print img {
   width: 24px;
   height: 24px;
 }

@@ -42,167 +42,22 @@
 
     <!-- Main CSS -->
     <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/header.css" />
+    <link rel="stylesheet" href="assets/css/sidebar.css" />
   </head>
   <body>
     <div class="wrapper d-flex">
       <!-- Sidebar -->
-      <aside id="sidebar">
-        <div class="container">
-          <!-- Sidebar Logo -->
-          <div class="top d-flex flex-row align-items-center">
-            <a
-              href="index.html"
-              class="logo d-flex flex-row align-items-start gap-3"
-            >
-              <img src="assets/img/icon/check-done-02.png" alt="" />
-              <h4>TaskifyMe</h4>
-            </a>
-            <div class="toggle" id="toggle-btn">
-              <img
-                src="assets/img/icon/layout-left.png"
-                alt=""
-                id="toggle-btn"
-              />
-            </div>
-          </div>
-          <!-- Sidebar Menu -->
-          <ul class="d-flex flex-column gap-4">
-            <li>
-              <a
-                href="index.html"
-                class="d-flex flex-row align-items-center gap-3 active"
-              >
-                <div class="icon-side">
-                  <img src="assets/img/icon/home-line.png" alt="" />
-                </div>
-                <span>Dashboard</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="tugas-saya.html"
-                class="d-flex flex-row align-items-center gap-3"
-              >
-                <div class="icon-side">
-                  <img src="assets/img/icon/file-06.png" alt="" />
-                </div>
-                <span>Tugas Saya</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="kalender.html"
-                class="d-flex flex-row align-items-center gap-3"
-              >
-                <div class="icon-side">
-                  <img src="assets/img/icon/calendar-date.png" alt="" />
-                </div>
-                <span>Kalender</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="riwayat-tugas.html"
-                class="d-flex flex-row align-items-center gap-3"
-              >
-                <div class="icon-side">
-                  <img src="assets/img/icon/clock-rewind.png" alt="" />
-                </div>
-                <span>Riwayat Tugas</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </aside>
+      <?php
+        include('partials/sidebar.php');
+      ?>
       <!-- Content -->
       <section>
         <div class="container">
           <!-- Header -->
-          <header>
-            <div
-              class="container d-flex flex-row align-items-center justify-content-end gap-1"
-            >
-              <div class="notification">
-                <img src="assets/img/icon/bell-02.png" alt="Bell" />
-              </div>
-              <div class="profile">
-                <div class="btn-group">
-                  <button
-                    type="button"
-                    class="btn dropdown-toggle d-flex align-items-center gap-2"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <div class="profile-img">
-                      <img
-                        src="assets/img/profil/user.jpeg"
-                        alt="Profile"
-                        class="rounded-circle"
-                      />
-                    </div>
-                    <span>Halo, Rahyan!</span>
-                  </button>
-                  <ul class="dropdown-menu dropdown-menu-end">
-                    <li
-                      class="profile-pop d-flex flex-row align-items-center gap-2 border-bottom"
-                    >
-                      <div class="icon-dropdown">
-                        <img
-                          src="assets/img/profil/user.jpeg"
-                          alt="Profile"
-                          class="rounded-circle"
-                        />
-                      </div>
-                      <span>Rahyan</span>
-                    </li>
-                    <li>
-                      <a
-                        href=""
-                        class="d-flex flex-row align-items-center profile-menu"
-                        ><div class="icon-dropdown">
-                          <img src="assets/img/icon/settings-02.png" alt="" />
-                        </div>
-                        Pengaturan</a
-                      >
-                    </li>
-                    <li>
-                      <a
-                        href=""
-                        class="d-flex flex-row align-items-center profile-menu"
-                        ><div class="icon-dropdown">
-                          <img src="assets/img/icon/help-circle.png" alt="" />
-                        </div>
-                        Bantuan</a
-                      >
-                    </li>
-                    <li>
-                      <a
-                        href=""
-                        class="d-flex flex-row align-items-center profile-menu"
-                        ><div class="icon-dropdown">
-                          <img
-                            src="assets/img/icon/annotation-question.png"
-                            alt=""
-                          />
-                        </div>
-                        FAQs</a
-                      >
-                    </li>
-                    <li class="mt-5">
-                      <a
-                        href=""
-                        class="d-flex flex-row align-items-center profile-menu"
-                        ><div class="icon-dropdown">
-                          <img src="assets/img/icon/log-out-03.png" alt="" />
-                        </div>
-                        Keluar</a
-                      >
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </header>
+          <?php
+            include('partials/header.php');
+          ?>
           <div class="content">
             <div class="heading-page d-flex flex-row align-items-center gap-2">
               <div class="line"></div>
@@ -210,7 +65,7 @@
             </div>
             <div class="dashboard-task row">
               <div class="new-task col">
-                <div class="card p-3">
+                <div class="">
                   <h6>Baru Ditambahkan</h6>
                   <hr />
                   <table>
@@ -220,9 +75,15 @@
                       <th scope="col">Deskripsi</th>
                       <th scope="col">Aksi</th>
                     </tr>
-                    <tr>
+                    <tr class="data rounded">
                       <td scope="col">1</td>
-                      <td scope="col">Design System UI/UX</td>
+                      <td
+                        scope="col"
+                        class="text-truncate"
+                        style="max-width: 200px"
+                      >
+                        Design System UI/UX
+                      </td>
                       <td
                         scope="col"
                         class="text-truncate"
@@ -243,9 +104,15 @@
                         </button>
                       </td>
                     </tr>
-                    <tr>
+                    <tr class="data rounded">
                       <td scope="col">1</td>
-                      <td scope="col">Design System UI/UX</td>
+                      <td
+                        scope="col"
+                        class="text-truncate"
+                        style="max-width: 200px"
+                      >
+                        Design System UI/UX
+                      </td>
                       <td
                         scope="col"
                         class="text-truncate"
@@ -266,9 +133,15 @@
                         </button>
                       </td>
                     </tr>
-                    <tr>
+                    <tr class="data rounded">
                       <td scope="col">1</td>
-                      <td scope="col">Design System UI/UX</td>
+                      <td
+                        scope="col"
+                        class="text-truncate"
+                        style="max-width: 200px"
+                      >
+                        Design System UI/UX
+                      </td>
                       <td
                         scope="col"
                         class="text-truncate"
@@ -289,9 +162,15 @@
                         </button>
                       </td>
                     </tr>
-                    <tr>
+                    <tr class="data rounded">
                       <td scope="col">1</td>
-                      <td scope="col">Design System UI/UX</td>
+                      <td
+                        scope="col"
+                        class="text-truncate"
+                        style="max-width: 200px"
+                      >
+                        Design System UI/UX
+                      </td>
                       <td
                         scope="col"
                         class="text-truncate"
@@ -316,7 +195,7 @@
                 </div>
               </div>
               <div class="due-task col">
-                <div class="card p-3">
+                <div class="">
                   <h6>Mendekati Deadline</h6>
                   <hr />
                   <table>
@@ -326,9 +205,15 @@
                       <th scope="col">Deskripsi</th>
                       <th scope="col">Aksi</th>
                     </tr>
-                    <tr>
+                    <tr class="data rounded">
                       <td scope="col">1</td>
-                      <td scope="col">Design System UI/UX</td>
+                      <td
+                        scope="col"
+                        class="text-truncate"
+                        style="max-width: 200px"
+                      >
+                        Design System UI/UX
+                      </td>
                       <td
                         scope="col"
                         class="text-truncate"
@@ -349,9 +234,15 @@
                         </button>
                       </td>
                     </tr>
-                    <tr>
+                    <tr class="data rounded">
                       <td scope="col">1</td>
-                      <td scope="col">Design System UI/UX</td>
+                      <td
+                        scope="col"
+                        class="text-truncate"
+                        style="max-width: 200px"
+                      >
+                        Design System UI/UX
+                      </td>
                       <td
                         scope="col"
                         class="text-truncate"
@@ -372,9 +263,15 @@
                         </button>
                       </td>
                     </tr>
-                    <tr>
+                    <tr class="data rounded">
                       <td scope="col">1</td>
-                      <td scope="col">Design System UI/UX</td>
+                      <td
+                        scope="col"
+                        class="text-truncate"
+                        style="max-width: 200px"
+                      >
+                        Design System UI/UX
+                      </td>
                       <td
                         scope="col"
                         class="text-truncate"
@@ -395,9 +292,15 @@
                         </button>
                       </td>
                     </tr>
-                    <tr>
+                    <tr class="data rounded">
                       <td scope="col">1</td>
-                      <td scope="col">Design System UI/UX</td>
+                      <td
+                        scope="col"
+                        class="text-truncate"
+                        style="max-width: 200px"
+                      >
+                        Design System UI/UX
+                      </td>
                       <td
                         scope="col"
                         class="text-truncate"
@@ -426,7 +329,6 @@
         </div>
       </section>
     </div>
-    <script src="script.js"></script>
     <!-- Main JS -->
     <script src="assets/js/script.js"></script>
 

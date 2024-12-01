@@ -1,0 +1,77 @@
+/* Color Root */
+:root {
+  --primary: #277f57;
+  --secondary: #52bd95;
+  --tertiary: #eef4ef;
+  --white: #fff;
+  --dark: #494a4c;
+  --black: #0c0c0c;
+  --btn-detail: #12ca6e;
+  --btn-add: #3396d9;
+  --btn-delete: #ff0137;
+  --btn-print: #fec868;
+  --flag-low: #4aa81b;
+  --flag-mid: #ff7f00;
+  --flag-high: #e55069;
+  --bg-flag-low: #e2f1da;
+  --bg-flag-mid: #fff3e6;
+  --bg-flag-high: #fcf0f2;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: "Plus Jakarta Sans";
+}
+section.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+section .content .form-input .form-control {
+  width: 450px;
+}
+section .content .form-input .form-control::placeholder {
+  font-size: 14px;
+  color: #b4b4b4;
+}
+section .content .form-input .password-wrapper {
+  position: relative;
+}
+section .content .form-input .password-wrapper .toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #b4b4b4;
+  font-size: 16px;
+}
+section .content .form-input .password-wrapper .toggle-password:hover {
+  color: #333;
+}
+section .content .form-image img {
+  width: 80%;
+  height: auto;
+  object-fit: contain;
+}
+section .content .btn-submit {
+  background-color: var(--secondary);
+  width: 450px;
+  padding: 0.75rem;
+  border: 0;
+}
+section .content .btn-submit:hover {
+  background-color: #3a9d79;
+}
+section .content .btn-register a {
+  text-decoration: none;
+  color: var(--primary);
+  font-weight: 500;
+}
+section .content .btn-register a:hover {
+  text-decoration: underline;
+}
