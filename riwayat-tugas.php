@@ -1,3 +1,15 @@
+<?php
+  session_start();
+  if (isset($_SESSION['userweb'])) {
+      include './koneksi.php';
+
+      // Ambil id_user dari session
+      $id_user = $_SESSION['id_user'];
+  } else {
+      echo "<script>alert('Anda harus login terlebih dahulu!')</script>";
+      header("location:login.php");
+  }
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>

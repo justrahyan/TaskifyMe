@@ -1,3 +1,16 @@
+<?php
+  if (session_status() == PHP_SESSION_NONE) {
+      session_start();
+  }
+
+  // Database connection
+  $koneksi = mysqli_connect('localhost', 'root', '', 'taskifyme');
+
+  // Optional: Add error handling for database connection
+  if (!$koneksi) {
+      die("Connection failed: " . mysqli_connect_error());
+  }
+?>
 <header>
     <div
       class="container d-flex align-items-center justify-content-between"
@@ -29,7 +42,7 @@
                   class="rounded-circle"
                 />
               </div>
-              <span>Halo, Rahyan!</span>
+              <span>Halo, <?php echo $_SESSION['userweb']; ?>!</span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
               <li
@@ -42,7 +55,7 @@
                     class="rounded-circle"
                   />
                 </div>
-                <span>Rahyan</span>
+                <span><?php echo $_SESSION['userweb']; ?></span>
               </li>
               <li>
                 <a
@@ -79,7 +92,7 @@
               </li>
               <li class="mt-5">
                 <a
-                  href="login.php"
+                  href="logout.php"
                   class="d-flex flex-row align-items-center profile-menu"
                   ><div class="icon-dropdown">
                     <img src="assets/img/icon/log-out-03.png" alt="" />

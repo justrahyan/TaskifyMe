@@ -46,6 +46,7 @@ section .container {
 section .container .content {
   padding: 1.5rem 0;
   margin-top: 5rem;
+  padding-bottom: 4rem;
 }
 section .container .content .heading-page {
   margin-bottom: 1rem;
@@ -81,11 +82,30 @@ section .container .content .add-filter .filter-select img {
   width: 24px;
   height: 24px;
 }
-section .container .content .add-filter .filter-select select option {
-  font-weight: 500;
-  padding: 1rem;
-  color: var(--white);
+section .container .content .add-filter .filter-select #filtering {
+  width: 180px;
+  padding: 8px 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  color: #333;
+  font-size: 14px;
+  appearance: none;
+  cursor: pointer;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
 }
+
+section .container .content .add-filter .filter-select #filtering:hover {
+  border-color: #aaa;
+  background-color: #fff;
+}
+
+section .container .content .add-filter .filter-select #filtering:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
 section .container .content table {
   width: 100%;
   border-spacing: 0 10px;
@@ -133,4 +153,159 @@ section .container .content table .btn-delete {
 section .container .content table .btn-delete img {
   width: 24px;
   height: 24px;
+}
+.modal .modal-dialog {
+  min-width: 750px;
+}
+.modal .modal-dialog .modal-content .modal-body .description img {
+  width: 24px;
+  height: 24px;
+}
+.modal .modal-dialog .modal-content .modal-body textarea {
+  height: 100px;
+  width: 70%;
+}
+.modal .modal-dialog .modal-content .modal-body .btn-save {
+  background-color: var(--primary);
+  color: var(--white);
+  font-size: 14px;
+}
+.modal .modal-dialog .modal-content .modal-body .menu-container {
+  width: 30%;
+}
+.modal .modal-dialog .modal-content .modal-body .menu .menu-icon {
+  width: 32px;
+}
+.modal .modal-dialog .modal-content .modal-body .menu .menu-icon img {
+  width: 65%;
+}
+.modal .modal-dialog .modal-content .modal-body .arrow {
+  height: auto;
+  width: 32px;
+}
+.modal
+  .modal-dialog
+  .modal-content
+  .modal-body
+  .menu-container
+  .dropdown-menu
+  .priority-low:hover {
+  background-color: #e2f1da;
+}
+.modal
+  .modal-dialog
+  .modal-content
+  .modal-body
+  .menu-container
+  .dropdown-menu
+  .priority-low:hover
+  > svg
+  path {
+  stroke: #4aa81b;
+}
+.modal
+  .modal-dialog
+  .modal-content
+  .modal-body
+  .menu-container
+  .dropdown-menu
+  .priority-mid:hover {
+  background-color: #fff3e6;
+}
+.modal
+  .modal-dialog
+  .modal-content
+  .modal-body
+  .menu-container
+  .dropdown-menu
+  .priority-mid:hover
+  > svg
+  path {
+  stroke: #ff7f00;
+}
+.modal
+  .modal-dialog
+  .modal-content
+  .modal-body
+  .menu-container
+  .dropdown-menu
+  .priority-high:hover {
+  background-color: #fcf0f2;
+}
+.modal
+  .modal-dialog
+  .modal-content
+  .modal-body
+  .menu-container
+  .dropdown-menu
+  .priority-high:hover
+  > svg
+  path {
+  stroke: #e55069;
+}
+.modal .modal-dialog .modal-content .modal-header h6 {
+  font-size: 1rem;
+  font-weight: bold;
+}
+.form-select,
+.form-control {
+  min-height: 40px;
+  border-radius: 8px;
+}
+.modal .modal-dialog .modal-content .modal-footer .btn-save {
+  background-color: var(--primary);
+  color: var(--white);
+  font-size: 14px;
+}
+.modal .modal-dialog .modal-content .modal-footer .btn-save,
+.modal .modal-dialog .modal-content .modal-footer .btn-secondary {
+  width: 49%;
+}
+
+/* Notifikasi Update Data */
+.notification-update {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4caf50; /* Hijau untuk sukses */
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  font-size: 14px;
+  display: none;
+  animation: fadeIn 0.5s, fadeOut 0.5s 3.5s; /* Animasi */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Efek Loading */
+#loading-overlay {
+  display: none; /* Tersembunyi secara default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999; /* Pastikan berada di atas elemen lain */
+  text-align: center;
 }

@@ -1,3 +1,15 @@
+<?php
+  session_start();
+  if (isset($_SESSION['userweb'])) {
+      include './koneksi.php';
+
+      // Ambil id_user dari session
+      $id_user = $_SESSION['id_user'];
+  } else {
+      echo "<script>alert('Anda harus login terlebih dahulu!')</script>";
+      header("location:login.php");
+  }
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -77,42 +89,34 @@
                   width="100%" height="350" class="rounded" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
                 ></iframe>
               </div>
-              <div class="top-list-content">
-                <div class="top-list">
-                  <p class="top-list-heading">
-                    <i class="fa-solid fa-location-dot"></i>Jalan Daeng Tata Raya
-                    Parang Tambung, Mannuruki, Kec. Tamalate, Kota Makassar, Sulawesi
-                    Selatan 90224
-                  </p>
-                  <p class="top-list-text">
-                    Anda dapat mengunjungi alamat kami jika anda mempunyai kesulitan.
-                  </p>
+              <div class="row mt-4 text-center text-md-start">
+                <div class="col-md-6 col-12 mb-3">
+                  <div class="fw-bold mb-2">
+                    <i class="fa-solid fa-location-dot"></i>
+                    Jalan Daeng Tata Raya Parang Tambung, Mannuruki, Kec. Tamalate, Kota Makassar, Sulawesi Selatan 90224
+                  </div>
+                  <p>Anda dapat mengunjungi alamat kami jika anda mempunyai kesulitan.</p>
                 </div>
-                <div class="top-list">
-                  <p class="top-list-heading">
-                    <i class="fa fa-solid fa-phone"></i> (0411)865677
-                  </p>
-                  <p class="top-list-text">
-                    Anda dapat menghubungi nomor kami jika anda mempunyai kesulitan.
-                  </p>
+                <div class="col-md-6 col-12 mb-3">
+                  <div class="fw-bold mb-2">
+                    <i class="fa-solid fa-phone"></i>
+                    (0411)865677
+                  </div>
+                  <p>Anda dapat menghubungi nomor kami jika anda mempunyai kesulitan.</p>
                 </div>
-                <div class="top-list">
-                  <p class="top-list-heading">
-                    <i class="fa fa-solid fa-envelope"></i> eksplorinid@gmail.com
-                  </p>
-                  <p class="top-list-text">
-                    Anda dapat menghubungi kami lewat email jika butuh informasi
-                    tentang website kami.
-                  </p>
+                <div class="col-md-6 col-12 mb-3">
+                  <div class="fw-bold mb-2">
+                    <i class="fa-solid fa-envelope"></i>
+                    taskifyme@mail.me
+                  </div>
+                  <p>Anda dapat menghubungi kami lewat email jika butuh informasi tentang website kami.</p>
                 </div>
-                <div class="top-list">
-                  <p class="top-list-heading instagram">
-                    <i class="fa fa-brands fa-instagram"></i> @eksplorin_id
-                  </p>
-                  <p class="top-list-text">
-                    Anda dapat mengikuti kami di platform instagram agar anda tidak
-                    kehilangan informasi terbaru tentang Eksplorin.
-                  </p>
+                <div class="col-md-6 col-12 mb-3">
+                  <div class="fw-bold mb-2">
+                    <i class="fa-brands fa-instagram"></i>
+                    @taskify.me
+                  </div>
+                  <p>Anda dapat mengikuti kami di Instagram agar tidak kehilangan informasi terbaru tentang TaskifyMe.</p>
                 </div>
               </div>
             </div>

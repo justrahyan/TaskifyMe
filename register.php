@@ -1,3 +1,22 @@
+<?php
+    session_start();
+  if (isset($_POST['regist'])) {
+    include './koneksi.php';
+    $fullname = $_POST['fullname'];
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $sql =  "INSERT INTO user(fullname, username, email, password)
+    VALUES ('$fullname','$username','$email','$password')";
+    if ($koneksi->query($sql) === true) {
+        header("location:./login.php");
+        exit();
+    } else {
+      echo "Error: " . mysqli_error($koneksi);
+    }
+    $koneksi->close();
+  }
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -54,7 +73,7 @@
     <section class="container">
         <div class="d-flex flex-row content p-4">
             <div class="w-50 form-input d-flex flex-column justify-content-center align-items-start">
-                <form action="">
+                <form action="" method="post">
                   <h1 class="fw-bold mb-4">Buat Akun anda</h1>
                   <p class="mb-4">Selamat datang! Silahkan buat akun anda terlebih dahulu.</p>
                   <div class="mb-3">
@@ -83,7 +102,7 @@
                           </span>
                       </div>
                   </div>
-                  <button type="submit" class="btn-submit text-white fw-semibold rounded mb-5">Daftar</button>
+                  <button type="submit" name="regist" class="btn-submit text-white fw-semibold rounded mb-5">Daftar</button>
                 </form>
                 <span class="btn-register">Sudah punya akun? <a href="login.php">Masuk disini</a></span>
             </div>

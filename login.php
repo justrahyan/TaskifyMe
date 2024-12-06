@@ -54,12 +54,12 @@
     <section class="container">
         <div class="d-flex flex-row content p-4">
             <div class="w-50 form-input d-flex flex-column justify-content-center align-items-start">
-                <form action="">
+                <form action="login.php" method="post">
                     <h1 class="fw-bold mb-4">Login ke Akun anda</h1>
                     <p class="mb-4">Selamat datang! Silahkan login terlebih dahulu.</p>
                     <div class="mb-3">
-                        <label for="FormControlEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" name="email" id="FormControlEmail" placeholder="Masukkan email anda">
+                        <label for="FormControlUsername" class="form-label">Nama Pengguna</label>
+                        <input type="text" class="form-control" name="username" id="FormControlUsername" placeholder="Masukkan nama pengguna anda">
                     </div>
                     <div class="mb-4">
                         <label for="FormControlPassword" class="form-label">Kata Sandi</label>
@@ -75,7 +75,7 @@
                             </span>
                         </div>
                     </div>
-                    <button type="submit" class="btn-submit text-white fw-semibold rounded mb-5">Login</button>
+                    <button type="submit" name="login" class="btn-submit text-white fw-semibold rounded mb-5">Login</button>
                 </form>
                 <span class="btn-register">Belum punya akun? <a href="register.php">Daftar disini</a></span>
             </div>
@@ -84,6 +84,27 @@
             </div>
         </div>
     </section>
+
+    <?php
+    if (isset($_POST['login'])) {
+        session_start();
+        include './koneksi.php';
+
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+
+        $cekuser = mysqli_query($koneksi, "SELECT * FROM user WHERE username = '$username' AND password = '$password'");
+        $level = mysqli_num_rows($cekuser);
+        if ($level > 0) {
+                $user = mysqli_fetch_assoc($cekuser);
+                $_SESSION['userweb'] = $username;
+                $_SESSION['id_user'] = $user['id'];
+                header("location:./index.php");
+        } else {
+            echo "<script>alert('username atau password Anda salah. Silahkan coba lagi!')</script>";
+        }
+    }
+    ?>
     
     <!-- Main JS -->
     <script src="assets/js/script.js"></script>

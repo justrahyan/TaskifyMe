@@ -1,3 +1,15 @@
+<?php
+  session_start();
+  if (isset($_SESSION['userweb'])) {
+      include './koneksi.php';
+
+      // Ambil id_user dari session
+      $id_user = $_SESSION['id_user'];
+  } else {
+      echo "<script>alert('Anda harus login terlebih dahulu!')</script>";
+      header("location:login.php");
+  }
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -75,22 +87,26 @@
                       <th scope="col">Deskripsi</th>
                       <th scope="col">Aksi</th>
                     </tr>
+                    <?php
+                      $no = 1;
+                      $sql = mysqli_query($koneksi, "SELECT * FROM task WHERE user_id = '$id_user' ORDER BY id desc LIMIT 5");
+                      while ($row = mysqli_fetch_assoc($sql)) {
+                    ?>
                     <tr class="data rounded">
-                      <td scope="col">1</td>
+                      <td scope="col"><?php echo $no++ ?></td>
                       <td
                         scope="col"
                         class="text-truncate"
                         style="max-width: 200px"
                       >
-                        Design System UI/UX
+                        <?php echo $row['task_name'] ?>
                       </td>
                       <td
                         scope="col"
                         class="text-truncate"
                         style="max-width: 200px"
                       >
-                        Deskripsinya adalah Lorem ipsum dolor sit amet,
-                        consectetur adipisicing elit. Soluta, est.
+                        <?php echo $row['description'] ?>
                       </td>
                       <td scope="col">
                         <button
@@ -104,93 +120,7 @@
                         </button>
                       </td>
                     </tr>
-                    <tr class="data rounded">
-                      <td scope="col">1</td>
-                      <td
-                        scope="col"
-                        class="text-truncate"
-                        style="max-width: 200px"
-                      >
-                        Design System UI/UX
-                      </td>
-                      <td
-                        scope="col"
-                        class="text-truncate"
-                        style="max-width: 200px"
-                      >
-                        Deskripsinya adalah Lorem ipsum dolor sit amet,
-                        consectetur adipisicing elit. Soluta, est.
-                      </td>
-                      <td scope="col">
-                        <button
-                          class="btn btn-detail"
-                          aria-label="View Details"
-                        >
-                          <img
-                            src="assets/img/icon/eye.png"
-                            alt="View Details"
-                          />
-                        </button>
-                      </td>
-                    </tr>
-                    <tr class="data rounded">
-                      <td scope="col">1</td>
-                      <td
-                        scope="col"
-                        class="text-truncate"
-                        style="max-width: 200px"
-                      >
-                        Design System UI/UX
-                      </td>
-                      <td
-                        scope="col"
-                        class="text-truncate"
-                        style="max-width: 200px"
-                      >
-                        Deskripsinya adalah Lorem ipsum dolor sit amet,
-                        consectetur adipisicing elit. Soluta, est.
-                      </td>
-                      <td scope="col">
-                        <button
-                          class="btn btn-detail"
-                          aria-label="View Details"
-                        >
-                          <img
-                            src="assets/img/icon/eye.png"
-                            alt="View Details"
-                          />
-                        </button>
-                      </td>
-                    </tr>
-                    <tr class="data rounded">
-                      <td scope="col">1</td>
-                      <td
-                        scope="col"
-                        class="text-truncate"
-                        style="max-width: 200px"
-                      >
-                        Design System UI/UX
-                      </td>
-                      <td
-                        scope="col"
-                        class="text-truncate"
-                        style="max-width: 200px"
-                      >
-                        Deskripsinya adalah Lorem ipsum dolor sit amet,
-                        consectetur adipisicing elit. Soluta, est.
-                      </td>
-                      <td scope="col">
-                        <button
-                          class="btn btn-detail"
-                          aria-label="View Details"
-                        >
-                          <img
-                            src="assets/img/icon/eye.png"
-                            alt="View Details"
-                          />
-                        </button>
-                      </td>
-                    </tr>
+                    <?php } ?>
                   </table>
                 </div>
               </div>
