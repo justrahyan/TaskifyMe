@@ -61,6 +61,9 @@
     />
     <link rel="manifest" href="assets/img/favicon/site.webmanifest" />
 
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
     <!-- Main CSS -->
     <link rel="stylesheet" href="assets/css/tugas-saya.css" />
     <link rel="stylesheet" href="assets/css/header.css" />
@@ -94,8 +97,8 @@
                       </path>
                     </svg>
                   </div>
-                  <form action="search.php" method="GET">
-                    <input type="search" name="search" placeholder="Cari" 
+                  <form action="" method="GET">
+                    <input type="search" name="search" placeholder="Cari nama tugas" 
                       class="form-control ps-5 py-2 border rounded w-100 w-lg-50">
                   </form>
                 </div>
@@ -107,14 +110,10 @@
                 <span>Tambah</span>
               </button>
               <div class="filter-select d-flex align-items-center gap-2">
-                <img src="assets/img/icon/filter-funnel-01.png" alt="">
-                <select name="filter" id="filtering" class="px-2 py-1 rounded">
-                  <option>Default</option>
-                  <option value="nama">Nama Tugas</option>
-                  <option value="deadline">Deadline</option>
-                  <option value="status">Status</option>
-                  <option value="kategori">Kategori</option>
-                </select>
+                <button type="button" class="btn border border-secondary d-flex gap-2 align-items-center" data-bs-toggle="modal" data-bs-target="#filterModal">
+                  <img src="assets/img/icon/filter-funnel-01.png" alt="">
+                  <span>Filter Data</span>
+                </button>
               </div>
             </div>
             <hr>
@@ -124,17 +123,89 @@
                 <th scope="col" style="max-width: 200px;">Nama Tugas</th>
                 <th scope="col" style="max-width: 30px;"></th>
                 <th scope="col" style="max-width: 200px;">Deskripsi</th>
-                <th scope="col">Deadline</th>
-                <th scope="col">Kategori</th>
                 <th scope="col">Status</th>
+                <th scope="col">Kategori</th>
+                <th scope="col">Deadline</th>
                 <th scope="col">Aksi</th>
               </tr>
               <?php
+              if(isset($_SESSION['status-task']) && $_SESSION['status-task'] !=''){
+                echo 
+                '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                  <strong>Berhasil! </strong>' .  htmlspecialchars($_SESSION['status-task']) .
+                  '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>';
+              }
+              unset($_SESSION['status-task']);
+              ?>
+              <?php
+              if (isset($_SESSION['status-delete-task']) && $_SESSION['status-delete-task'] != '') {
+                  echo 
+                  '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                      <strong>Berhasil!</strong> ' . htmlspecialchars($_SESSION['status-delete-task']) . '
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>';
+                  unset($_SESSION['status-delete-task']);
+              }
+              ?>
+              <?php
+              if (isset($_SESSION['error-task']) && $_SESSION['error-task'] != '') {
+                  echo 
+                  '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                      <strong>Gagal!</strong> ' . htmlspecialchars($_SESSION['error-task']) . '
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>';
+                  unset($_SESSION['error-task']);
+              }
+              ?>
+              <?php
                 $no = 1;
-                $sql = mysqli_query($koneksi, "SELECT * FROM task WHERE user_id = '$id_user'");
-                  while ($row = mysqli_fetch_assoc($sql)) {
-                ?>
+                $search = isset($_GET['search']) ? mysqli_real_escape_string($koneksi, $_GET['search']) : '';
+
+                $startDate = isset($_GET['startDate']) ? $_GET['startDate'] : '';
+                $endDate = isset($_GET['endDate']) ? $_GET['endDate'] : '';
+                $priority = isset($_GET['priority']) ? $_GET['priority'] : '';
+                $category = isset($_GET['category']) ? $_GET['category'] : '';
+
+                // Mulai query dasar
+                $query = "SELECT * FROM task WHERE user_id = '$id_user' AND (status IS NULL OR status != 3)";
+
+                // Menambahkan filter berdasarkan rentang tanggal
+                if (!empty($startDate) && !empty($endDate)) {
+                    $query .= " AND deadline BETWEEN '$startDate' AND '$endDate'";
+                }
+
+                // Menambahkan filter berdasarkan prioritas
+                if (!empty($priority)) {
+                    $query .= " AND priority = '$priority'";
+                }
+
+                // Menambahkan filter berdasarkan kategori
+                if (!empty($category)) {
+                    $query .= " AND categories = '$category'";
+                }
+
+                // Menambahkan pencarian berdasarkan nama tugas
+                if (!empty($search)) {
+                    $query .= " AND task_name LIKE '%$search%'";
+                }
+
+                $sql = mysqli_query($koneksi, $query);
+                  if(mysqli_num_rows($sql) > 0){
+                    while ($row = mysqli_fetch_assoc($sql)) {
+                    if($row['status'] == 1){
+                      $status = "Belum Dikerja";
+                    }elseif($row['status'] == 2){
+                        $status = "Sedang Dikerja";
+                    } elseif($row['status'] == 3){
+                        $status = "Selesai";
+                    } else {
+                      $status = null;
+                    }
+              ?>
               <tr class="data rounded">
+                <td class="d-none user_id"><?php echo $row['user_id'];?></td>
+                <td class="d-none id_task"><?php echo $row['id'];?></td>
                 <td scope="col"><?php echo $no++ ?></td>
                 <td
                   scope="col"
@@ -206,7 +277,7 @@
                 <td
                   scope="col"
                 >
-                  <?php echo $row['status'] ?>
+                  <?php echo $status ?>
                 </td>
                 <td
                   scope="col"
@@ -220,12 +291,8 @@
                 </td>
                 <td scope="col" class="d-flex gap-2">
                   <a 
-                    class="btn btn-detail" 
-                    aria-label="View Details" 
-                    data-bs-toggle="modal" 
-                    data-bs-target="#detailModal" 
-                    data-task-name="<?php echo $row['task_name']; ?>" 
-                    data-description="<?php echo $row['description']; ?>"
+                    class="btn btn-detail view-detail" 
+                    aria-label="View Details"
                   >
                     <img src="assets/img/icon/eye.png" alt="View Details" />
                   </a>
@@ -240,7 +307,14 @@
                   </a>
                 </td>
               </tr>
-              <?php } ?>
+              <?php 
+                }
+              } else { 
+            ?>
+            <tr class="data rounded">
+              <td colspan="8" class="text-center">Tidak ada tugas</td>
+            </tr>
+            <?php } ?>
             </table>
           </div>
         </div>
@@ -259,35 +333,20 @@
             <h6 class="modal-title" id="addModalLabel">Tambah Tugas</h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
-            <form action="tugas-saya.php" method="post" class="d-flex flex-column gap-3">
-              <label for="nama_tugas">Nama Tugas</label>
-              <input type="text" id="nama_tugas" name="task_name" class="rounded p-2">
-          </div>
-          <div class="modal-footer">
-            <button type="submit" name="simpan_tugas" class="btn btn-save p-2 w-100">Simpan</button>
-            </form>
-          </div>
+          <form action="task-process/add_task.php" method="post">
+            <div class="modal-body">
+              <div class="d-flex flex-column gap-3">
+                <label for="nama_tugas">Nama Tugas</label>
+                <input type="text" id="nama_tugas" name="task_name" class="rounded p-2">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" name="simpan_tugas" class="btn btn-save p-2 w-100">Simpan</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
-    <?php
-      if (isset($_POST['simpan_tugas'])) {
-        $task_name = mysqli_real_escape_string($koneksi, $_POST['task_name']); // Hindari SQL Injection
-        $sql = "INSERT INTO task (user_id, task_name) VALUES ('$id_user', '$task_name')"; // Pastikan tabel bernama 'tasks' dengan kolom 'user_id' dan 'task_name'
-        if ($koneksi->query($sql) === true) {
-            header("location:tugas-saya.php"); // Kembali ke halaman tugas
-            exit();
-        } else {
-            echo "Error: " . mysqli_error($koneksi);
-        }
-        $koneksi->close();
-      }
-    ob_end_flush();
-    ?>
-
-    <!-- Notifikasi Berhasil Update Data -->
-    <div id="notification-update" class="notification-update" style="display: none;"></div>
 
     <!-- Modal Lihat Detail Tugas -->
     <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
@@ -302,47 +361,8 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body d-flex flex-column gap-4">
-                  <div class="description d-flex flex-row align-items-center gap-2">
-                      <img src="assets/img/icon/align-left.png" alt="">
-                      <h6 class="mb-0">Deskripsi Lengkap</h6>
+                  <div class="view_task_data">
                   </div>
-                  <?php
-                  $sql = mysqli_query($koneksi, "SELECT * FROM task WHERE user_id = '$id_user'");
-                  while ($row = mysqli_fetch_assoc($sql)) {
-                  ?>
-                  <div class="d-flex flex-row gap-2">
-                      <div class="description-form">
-                          <textarea class="form-control description-input" 
-                                    name="description" 
-                                    placeholder="Masukkan detail deskripsi" 
-                                    data-task-id="<?= $row['id']; ?>"><?= htmlspecialchars($row['description']); ?></textarea>
-                          <button type="button" class="btn btn-save p-2 save-description-btn" 
-                                  name="simpan_tugas" 
-                                  style="display: none;" 
-                                  data-task-id="<?= $row['id']; ?>">Simpan</button>
-                      </div>
-                      <div class="menu-container d-flex flex-column gap-2">
-                          <select class="form-select" aria-label="Status">
-                              <option selected>Status</option>
-                              <option value="1" <?= $row['status'] == '1' ? 'selected' : ''; ?>>Belum Dikerja</option>
-                              <option value="2" <?= $row['status'] == '2' ? 'selected' : ''; ?>>Sedang Dikerja</option>
-                              <option value="3" <?= $row['status'] == '3' ? 'selected' : ''; ?>>Selesai</option>
-                          </select>
-                          <select class="form-select" aria-label="Kategori">
-                              <option selected>Kategori</option>
-                              <option value="1" <?= $row['categories'] == 1 ? 'selected' : ''; ?>>Pekerjaan</option>
-                              <option value="2" <?= $row['categories'] == 2 ? 'selected' : ''; ?>>Pribadi</option>
-                          </select>
-                          <input type="date" class="form-control" aria-label="Tanggal" value="<?= $row['deadline']; ?>">
-                          <select class="form-select" aria-label="Prioritas">
-                              <option selected>Prioritas</option>
-                              <option value="1" <?= $row['priority'] == 1 ? 'selected' : ''; ?>>Rendah</option>
-                              <option value="2" <?= $row['priority'] == 2 ? 'selected' : ''; ?>>Sedang</option>
-                              <option value="3" <?= $row['priority'] == 3 ? 'selected' : ''; ?>>Tinggi</option>
-                          </select>
-                      </div>
-                  </div>
-                  <?php } ?>
               </div>
           </div>
       </div>
@@ -362,119 +382,70 @@
           </div>
           <div class="modal-footer">
             <div class="d-flex justify-content-between w-100">
-              <button type="button" class="btn btn-secondary p-2" data-bs-dismiss="modal">Tutup</button>
-              <button type="submit" class="btn btn-save p-2" name="simpan_tugas">Simpan</button>
+              <button type="button" class="btn btn-secondary p-2" data-bs-dismiss="modal">Batal</button>
+              <a href="#" id="confirmDeleteButton" class="btn btn-delete p-2">Hapus</a>
             </div>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-            <a href="#" id="confirmDeleteButton" class="btn btn-danger">Hapus</a>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Efek Loading Berhasil Update Data -->
-    <div id="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 9999; text-align: center;">
-      <div style="position: relative; top: 50%; transform: translateY(-50%);">
-          <div class="spinner-border text-light" role="status">
-              <span class="visually-hidden">Loading...</span>
+    <!-- Modal Filter -->
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <img src="assets/img/icon/filter-funnel-01.png" alt="" style="width: 24px; margin-right: 8px;">
+            <h5 class="modal-title" id="filterModalLabel">Filter Data Tugas</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <p class="text-light">Memperbarui data...</p>
+          <div class="modal-body">
+            <form id="filterForm" method="GET" action="">
+              <!-- Rentang Tanggal -->
+              <div class="mb-3">
+                <label for="startDate" class="form-label">Rentang Tanggal</label>
+                <div class="d-flex gap-2">
+                  <input type="date" class="form-control" id="startDate" name="startDate">
+                  <span>-</span>
+                  <input type="date" class="form-control" id="endDate" name="endDate">
+                </div>
+              </div>
+
+              <!-- Prioritas -->
+              <div class="mb-3">
+                <label for="priority" class="form-label">Prioritas</label>
+                <select class="form-select" id="priority" name="priority">
+                  <option value="">Pilih Prioritas</option>
+                  <option value="1">Rendah</option>
+                  <option value="2">Sedang</option>
+                  <option value="3">Tinggi</option>
+                </select>
+              </div>
+
+              <!-- Kategori -->
+              <div class="mb-3">
+                <label for="category" class="form-label">Kategori</label>
+                <select class="form-select" id="category" name="category">
+                  <option value="">Pilih Kategori</option>
+                  <option value="kategori_1">Kategori 1</option>
+                  <option value="kategori_2">Kategori 2</option>
+                  <option value="kategori_3">Kategori 3</option>
+                </select>
+              </div>
+
+              <!-- Tombol filter -->
+              <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-save">Terapkan Filter</button>
+                <button type="button" class="btn btn-secondary" id="resetFilter">Reset Filter</button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
 
     <script>
-      // Script untuk Tampilkan Detail Modal
-      document.addEventListener('DOMContentLoaded', () => {
-        const detailButtons = document.querySelectorAll('.btn-detail');
-        const modalTaskName = document.getElementById('modal-task-name');
-        const modalDescription = document.getElementById('modal-description');
-
-        detailButtons.forEach(button => {
-          button.addEventListener('click', function () {
-            const taskName = this.getAttribute('data-task-name');
-            const description = this.getAttribute('data-description');
-
-            // Isi modal dengan data dari tombol
-            modalTaskName.textContent = taskName;
-            modalDescription.textContent = description;
-          });
-        });
-      });
-
-      // Script untuk menampilkan notifikasi
-      function showNotification(message) {
-        const notification = document.getElementById('notification-update');
-        notification.textContent = message;
-        notification.style.display = 'block';
-
-        // Sembunyikan notifikasi setelah beberapa detik
-        setTimeout(() => {
-          notification.style.display = 'none';
-        }, 4000); // 4 detik
-      }
-
-      // Script Close Modal setelah update
-      function closeModal(detailModal) {
-        const modal = document.getElementById("detailModal");
-        if (modal) {
-          modal.style.display = 'none';
-          document.body.classList.remove('modal-open');
-          document.body.style.overflow = '';
-        }
-      }
-
-      // Script Update Data Deskripsi Tugas
-        document.addEventListener('DOMContentLoaded', () => {
-            // Ambil semua textarea dan tombol simpan
-            const textareas = document.querySelectorAll('.description-input');
-            const saveButtons = document.querySelectorAll('.save-description-btn');
-
-            textareas.forEach(textarea => {
-                const saveButton = document.querySelector(`.save-description-btn[data-task-id="${textarea.dataset.taskId}"]`);
-
-                // Tampilkan tombol simpan jika textarea diisi
-                textarea.addEventListener('input', () => {
-                    if (textarea.value.trim() !== '') {
-                        saveButton.style.display = 'inline-block';
-                    } else {
-                        saveButton.style.display = 'none';
-                    }
-                });
-
-                // Kirim data ke server untuk memperbarui deskripsi
-                saveButton.addEventListener('click', () => {
-                    const taskId = textarea.dataset.taskId;
-                    const description = textarea.value.trim();
-                    if (description === '') return;
-                    document.getElementById('loading-overlay').style.display = 'block';
-                    
-                    // Gunakan fetch untuk mengirim data ke server
-                    fetch('task-process/update_task.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ id: taskId, description: description })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                      document.getElementById('loading-overlay').style.display = 'none';
-                      if (data.success) {
-                        showNotification('Data berhasil diupdate');
-                        saveButton.style.display = 'none';
-                        closeModal('taskModal'); // Tutup Modal
-                        setTimeout(() => location.reload(), 4000); // Reload Halaman setelah 4 detik (bersamaan dengan notifikasi)
-                      } else {
-                        showNotification('Gagal memperbarui data');
-                      }
-                    })
-                    .catch(error => console.error('Error:', error));
-                    document.getElementById('loading-overlay').style.display = 'none';
-                });
-            });
-        });
-
-      // Script untuk hapus tugas
+      // Konfirmasi Hapus Tugas
       const deleteModal = document.getElementById("deleteModal");
       const confirmDeleteButton = document.getElementById("confirmDeleteButton");
 
@@ -486,8 +457,194 @@
         const taskId = button.getAttribute("data-task-id");
 
         // Set href di tombol konfirmasi hapus
-        confirmDeleteButton.href = `task-process/delete-task.php?id=${taskId}`;
+        confirmDeleteButton.href = `task-process/delete_task.php?id=${taskId}`;
       });
+
+      // Fungsi untuk mereset filter
+      document.getElementById('resetFilter').addEventListener('click', function() {
+          // Bersihkan nilai dari input filter
+          document.getElementById('startDate').value = '';
+          document.getElementById('endDate').value = '';
+          document.getElementById('priority').value = '';
+          document.getElementById('category').value = '';
+
+          // Segarkan halaman untuk menghapus filter
+          window.location.href = window.location.pathname;
+      });
+
+      // Fungsi untuk menampilkan detail tugas pada modal
+      $(document).ready(function() {
+          $('.view-detail').click(function(e) {
+              e.preventDefault();
+
+              // Ambil user_id dan id_task dari elemen terdekat
+              var user_id = $(this).closest('tr').find('.user_id').text();
+              var id_task = $(this).closest('tr').find('.id_task').text();
+
+              $.ajax({
+                  method: "POST",
+                  url: "task-process/view_task.php",
+                  data: {
+                      'click_view_btn': true,
+                      'user_id': user_id,
+                      'id_task': id_task,
+                  },
+                  success: function(response) {
+                      var taskData = JSON.parse(response);
+                      
+                      // Periksa apakah data tugas berhasil diambil
+                      if (taskData.task_name) {
+                          $('#modal-task-name').text(taskData.task_name);
+                          $('.view_task_data').html(taskData.details);
+                          $('#detailModal').modal('show'); // Tampilkan modal
+                      } else {
+                          alert("Tugas tidak ditemukan.");
+                      }
+                  },
+                  error: function() {
+                      alert("Terjadi kesalahan saat mengambil data tugas.");
+                  }
+              });
+          });
+      });
+
+      // Fungsi untuk mengupdate data tugas
+      $(document).ready(function () {
+          // Event delegation untuk tombol save-description-btn
+          $(document).on('input', '.description-input', function () {
+              const $textarea = $(this);
+              const $saveButton = $(`.save-description-btn[data-task-id="${$textarea.data('task-id')}"]`);
+              $saveButton.toggle($textarea.val().trim() !== '');
+          });
+
+          // Fungsi umum untuk update task
+          function updateTask(updateData, $saveButton, attribute) {
+              $.ajax({
+                  url: 'task-process/update_task.php',
+                  method: 'POST',
+                  contentType: 'application/json',
+                  data: JSON.stringify(updateData),
+                  success: function (response) {
+                      const data = JSON.parse(response);
+                      if (data.success) {
+                          // Tutup modal
+                          $('#taskModal').modal('hide');
+                          
+                          // Refresh halaman
+                          location.reload();
+                      } else {
+                          // Jika update gagal, bisa tambahkan error handling di sini
+                          alert('Gagal memperbarui data');
+                      }
+                  },
+                  error: function () {
+                      alert('Terjadi kesalahan, coba lagi');
+                  }
+              });
+          }
+
+          // Handler untuk update deskripsi
+          $(document).on('click', '.save-description-btn', function () {
+              const $saveButton = $(this);
+              const taskId = $saveButton.data('task-id');
+              const description = $(`.description-input[data-task-id="${taskId}"]`).val().trim();
+
+              if (description === '') return;
+
+              updateTask({ 
+                  id: taskId, 
+                  description: description 
+              }, $saveButton, 'description');
+          });
+
+          // Fungsi helper untuk event delegation
+          function createDynamicUpdateHandler(selector, attribute) {
+              $(document).on('change', selector, function () {
+                  const $select = $(this);
+                  const taskId = $select.data('task-id');
+                  const $saveButton = $(`.save-${attribute}-btn[data-task-id="${taskId}"]`);
+                  const originalValue = $select.data('original-value') || '';
+
+                  $saveButton.toggle($select.val() !== originalValue);
+              });
+
+              $(document).on('click', `.save-${attribute}-btn`, function () {
+                  const $saveButton = $(this);
+                  const taskId = $saveButton.data('task-id');
+                  const updatedValue = $(`.${attribute}-select[data-task-id="${taskId}"]`).val();
+
+                  const updateData = { id: taskId };
+                  updateData[attribute] = updatedValue;
+
+                  updateTask(updateData, $saveButton, attribute);
+              });
+          }
+
+          // Apply dynamic handlers for different attributes
+          createDynamicUpdateHandler('.status-select', 'status');
+          createDynamicUpdateHandler('.categories-select', 'categories');
+          createDynamicUpdateHandler('.deadline-select', 'deadline');
+          createDynamicUpdateHandler('.priority-select', 'priority');
+
+          // Tambah Kategori baru
+          $(document).ready(function() {
+              // Menambahkan kategori baru
+              $('.add-category-btn').click(function() {
+                  var newCategory = $('.new-category-input').val().trim();
+
+                  if (newCategory !== "") {
+                      // Mengirim data kategori ke server menggunakan AJAX
+                      $.ajax({
+                          url: './task-process/add_category.php',
+                          method: 'POST',
+                          contentType: 'application/json',
+                          data: JSON.stringify({ name: newCategory, user_id: <?php echo $_SESSION['id_user']; ?> }),
+                          success: function(response) {
+                              var data = JSON.parse(response);
+                              console.log(data); // Tambahkan log untuk melihat hasil respon dari server
+                              if (data.success) {
+                                  var newOption = $('<option></option>').text(newCategory).val(data.id);
+                                  $('.categories-select').append(newOption);
+                                  $('.new-category-input').val('');
+                              } else {
+                                  alert(data.message);
+                              }
+                          },
+                          error: function() {
+                              alert("Terjadi kesalahan, coba lagi.");
+                          }
+                      });
+                  } else {
+                      alert('Kategori tidak boleh kosong.');
+                  }
+              });
+
+              // Memuat kategori saat halaman dimuat
+              loadCategories();
+
+              function loadCategories() {
+                  $.ajax({
+                      url: './task-process/get_categories.php', // Pastikan URL ini sesuai
+                      method: 'GET',
+                      success: function(response) {
+                          var data = JSON.parse(response);
+                          if (data.success && data.categories.length > 0) {
+                              $.each(data.categories, function(index, category) {
+                                  var newOption = $('<option></option>').text(category.name).val(category.id);
+                                  $('.categories-select').append(newOption);
+                              });
+                          } else {
+                              $('.categories-select').append('<option disabled>Belum ada kategori yang dibuat</option>');
+                          }
+                      },
+                      error: function() {
+                          alert("Gagal memuat kategori.");
+                      }
+                  });
+              }
+          });
+      });
+
     </script>
 
     <script src="script.js"></script>

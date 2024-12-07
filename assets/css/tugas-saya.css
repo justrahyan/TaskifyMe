@@ -79,8 +79,8 @@ section .container .content .add-filter .btn-add span {
   color: var(--white);
 }
 section .container .content .add-filter .filter-select img {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
 }
 section .container .content .add-filter .filter-select #filtering {
   width: 180px;
@@ -163,7 +163,7 @@ section .container .content table .btn-delete img {
 }
 .modal .modal-dialog .modal-content .modal-body textarea {
   height: 100px;
-  width: 70%;
+  width: 100%;
 }
 .modal .modal-dialog .modal-content .modal-body .btn-save {
   background-color: var(--primary);
@@ -183,66 +183,6 @@ section .container .content table .btn-delete img {
   height: auto;
   width: 32px;
 }
-.modal
-  .modal-dialog
-  .modal-content
-  .modal-body
-  .menu-container
-  .dropdown-menu
-  .priority-low:hover {
-  background-color: #e2f1da;
-}
-.modal
-  .modal-dialog
-  .modal-content
-  .modal-body
-  .menu-container
-  .dropdown-menu
-  .priority-low:hover
-  > svg
-  path {
-  stroke: #4aa81b;
-}
-.modal
-  .modal-dialog
-  .modal-content
-  .modal-body
-  .menu-container
-  .dropdown-menu
-  .priority-mid:hover {
-  background-color: #fff3e6;
-}
-.modal
-  .modal-dialog
-  .modal-content
-  .modal-body
-  .menu-container
-  .dropdown-menu
-  .priority-mid:hover
-  > svg
-  path {
-  stroke: #ff7f00;
-}
-.modal
-  .modal-dialog
-  .modal-content
-  .modal-body
-  .menu-container
-  .dropdown-menu
-  .priority-high:hover {
-  background-color: #fcf0f2;
-}
-.modal
-  .modal-dialog
-  .modal-content
-  .modal-body
-  .menu-container
-  .dropdown-menu
-  .priority-high:hover
-  > svg
-  path {
-  stroke: #e55069;
-}
 .modal .modal-dialog .modal-content .modal-header h6 {
   font-size: 1rem;
   font-weight: bold;
@@ -257,55 +197,13 @@ section .container .content table .btn-delete img {
   color: var(--white);
   font-size: 14px;
 }
-.modal .modal-dialog .modal-content .modal-footer .btn-save,
-.modal .modal-dialog .modal-content .modal-footer .btn-secondary {
-  width: 49%;
-}
-
-/* Notifikasi Update Data */
-.notification-update {
-  position: fixed;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #4caf50; /* Hijau untuk sukses */
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
+.modal .modal-dialog .modal-content .modal-footer .btn-delete {
+  background-color: var(--btn-delete);
+  color: var(--white);
   font-size: 14px;
-  display: none;
-  animation: fadeIn 0.5s, fadeOut 0.5s 3.5s; /* Animasi */
 }
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-/* Efek Loading */
-#loading-overlay {
-  display: none; /* Tersembunyi secara default */
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 9999; /* Pastikan berada di atas elemen lain */
-  text-align: center;
+.modal .modal-dialog .modal-content .modal-footer .btn-save,
+.modal .modal-dialog .modal-content .modal-footer .btn-secondary,
+.modal .modal-dialog .modal-content .modal-footer .btn-delete {
+  width: 49%;
 }

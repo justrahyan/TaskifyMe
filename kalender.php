@@ -96,12 +96,15 @@
 
       $(document).ready(function(){
         var calendar = $('#calendar').fullCalendar({
-          editable: true,
+          editable: false,
           header: {
             left: 'prev, next today',
             center: 'title',
             right: 'month, agendaWeek, agendaDay'
-          }
+          },
+          events: 'tampil-kalender.php?' + new Date().getTime(), // tampilkan data dari database
+          selectable: true,
+          selectHelper: true,
         })
       })
 

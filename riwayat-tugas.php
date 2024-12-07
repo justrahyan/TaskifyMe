@@ -85,15 +85,21 @@
                       </path>
                     </svg>
                   </div>
-                  <form action="search.php" method="GET">
-                    <input type="search" name="search" placeholder="Cari" 
+                  <form action="" method="GET">
+                    <input type="search" name="search" placeholder="Cari nama tugas" 
                       class="form-control ps-5 py-2 border rounded w-100 w-lg-50">
                   </form>
                 </div>
               </div>
             </div>
-            <div class="add-filter">
-              
+            <div class="add-filter d-flex flex-row align-items-center justify-content-end">
+              <div class="filter-select d-flex align-items-center gap-2">
+                <!-- Tombol Filter -->
+                <button type="button" class="btn border border-secondary d-flex gap-2 align-items-center" data-bs-toggle="modal" data-bs-target="#filterModal">
+                  <img src="assets/img/icon/filter-funnel-01.png" alt="">
+                  <span>Filter Data</span>
+                </button>
+              </div>
             </div>
             <hr>
             <table>
@@ -102,19 +108,64 @@
                 <th scope="col" style="max-width: 200px;">Nama Tugas</th>
                 <th scope="col" style="max-width: 30px;"></th>
                 <th scope="col" style="max-width: 200px;">Deskripsi</th>
-                <th scope="col">Deadline</th>
-                <th scope="col">Kategori</th>
                 <th scope="col">Status</th>
+                <th scope="col">Kategori</th>
+                <th scope="col">Deadline</th>
                 <th scope="col">Aksi</th>
               </tr>
+              <?php
+                $no = 1;
+                $search = isset($_GET['search']) ? mysqli_real_escape_string($koneksi, $_GET['search']) : '';
+
+                $startDate = isset($_GET['startDate']) ? $_GET['startDate'] : '';
+                $endDate = isset($_GET['endDate']) ? $_GET['endDate'] : '';
+                $priority = isset($_GET['priority']) ? $_GET['priority'] : '';
+                $category = isset($_GET['category']) ? $_GET['category'] : '';
+
+                // Mulai query dasar
+                $query = "SELECT * FROM task WHERE user_id = '$id_user' AND status = '3'";
+
+                // Menambahkan filter berdasarkan rentang tanggal
+                if (!empty($startDate) && !empty($endDate)) {
+                    $query .= " AND deadline BETWEEN '$startDate' AND '$endDate'";
+                }
+
+                // Menambahkan filter berdasarkan prioritas
+                if (!empty($priority)) {
+                    $query .= " AND priority = '$priority'";
+                }
+
+                // Menambahkan filter berdasarkan kategori
+                if (!empty($category)) {
+                    $query .= " AND categories = '$category'";
+                }
+
+                // Menambahkan pencarian berdasarkan nama tugas
+                if (!empty($search)) {
+                    $query .= " AND task_name LIKE '%$search%'";
+                }
+
+                // Eksekusi query
+                $sql = mysqli_query($koneksi, $query);
+                while ($row = mysqli_fetch_assoc($sql)) {
+                    if ($row['status'] == 1) {
+                        $status = "Belum Dikerja";
+                    } elseif ($row['status'] == 2) {
+                        $status = "Sedang Dikerja";
+                    } elseif ($row['status'] == 3) {
+                        $status = "Selesai";
+                    } else {
+                        $status = null;
+                    }
+                ?>
               <tr class="data rounded">
-                <td scope="col">1</td>
+                <td scope="col"><?php echo $no++ ?></td>
                 <td
                   scope="col"
                   class="text-truncate"
                   style="max-width: 200px"
                 >
-                  Matematika Diskrit
+                  <?php echo $row['task_name'] ?>
                 </td>
                 <td scope="col" style="max-width: 30px;">
                   <div
@@ -122,7 +173,20 @@
                     style="
                       width: 24px;
                       height: 24px;
-                      background-color: #e2f1da;
+                      background-color:
+                      <?php 
+                          switch($row['priority']) {
+                              case '1':
+                                  echo '#e2f1da';
+                                  break;
+                              case '2':
+                                  echo '#FFF3E6';
+                                  break;
+                              case '3':
+                                  echo '#FCF0F2';
+                                  break;
+                          }
+                      ?>;
                       border-radius: 4px;
                     "
                   >
@@ -134,7 +198,20 @@
                     >
                       <path
                         fill="none"
-                        stroke="#4aa81b"
+                        stroke="
+                        <?php 
+                            switch($row['priority']) {
+                                case '1':
+                                    echo '#4aa81b';
+                                    break;
+                                case '2':
+                                    echo '#FF7F00';
+                                    break;
+                                case '3':
+                                    echo '#E55069';
+                                    break;
+                            }
+                        ?>"
                         stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
@@ -148,41 +225,105 @@
                   class="text-truncate"
                   style="max-width: 200px"
                 >
-                  Deskripsinya adalah Lorem ipsum dolor sit amet,
-                  consectetur adipisicing elit. Soluta, est.
+                  <?php echo $row['description'] ?>
                 </td>
                 <td
                   scope="col"
                 >
-                  13-12-2024
+                  <?php echo $status ?>
                 </td>
                 <td
                   scope="col"
                 >
-                  Kuliah
+                  <?php echo $row['categories'] ?>
                 </td>
                 <td
                   scope="col"
                 >
-                  Sedang Dikerja
+                  <?php echo $row['deadline'] ?>
                 </td>
-                <td scope="col">
-                  <button
+                <td scope="col" class="d-flex gap-2">
+                  <a href="task-process/print_task.php"
                     class="btn btn-print"
-                    aria-label="View Details"
                   >
-                    <img
-                      src="assets/img/icon/printer.png"
-                      alt="Print"
-                    />
-                  </button>
+                    <img src="assets/img/icon/printer.png" alt="Print Task" />
+                  </a>
                 </td>
               </tr>
+              <?php } ?>
             </table>
           </div>
         </div>
       </section>
     </div>
+
+    <!-- Modal Filter -->
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <img src="assets/img/icon/filter-funnel-01.png" alt="" style="width: 24px; margin-right: 8px;">
+            <h5 class="modal-title" id="filterModalLabel">Filter Data Tugas</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="filterForm" method="GET" action="">
+              <!-- Rentang Tanggal -->
+              <div class="mb-3">
+                <label for="startDate" class="form-label">Rentang Tanggal</label>
+                <div class="d-flex gap-2">
+                  <input type="date" class="form-control" id="startDate" name="startDate">
+                  <span>-</span>
+                  <input type="date" class="form-control" id="endDate" name="endDate">
+                </div>
+              </div>
+
+              <!-- Prioritas -->
+              <div class="mb-3">
+                <label for="priority" class="form-label">Prioritas</label>
+                <select class="form-select" id="priority" name="priority">
+                  <option value="">Pilih Prioritas</option>
+                  <option value="1">Rendah</option>
+                  <option value="2">Sedang</option>
+                  <option value="3">Tinggi</option>
+                </select>
+              </div>
+
+              <!-- Kategori -->
+              <div class="mb-3">
+                <label for="category" class="form-label">Kategori</label>
+                <select class="form-select" id="category" name="category">
+                  <option value="">Pilih Kategori</option>
+                  <option value="kategori_1">Kategori 1</option>
+                  <option value="kategori_2">Kategori 2</option>
+                  <option value="kategori_3">Kategori 3</option>
+                </select>
+              </div>
+
+              <!-- Tombol filter -->
+              <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-save">Terapkan Filter</button>
+                <button type="button" class="btn btn-secondary" id="resetFilter">Reset Filter</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Fungsi untuk mereset filter
+      document.getElementById('resetFilter').addEventListener('click', function() {
+          // Bersihkan nilai dari input filter
+          document.getElementById('startDate').value = '';
+          document.getElementById('endDate').value = '';
+          document.getElementById('priority').value = '';
+          document.getElementById('category').value = '';
+
+          // Segarkan halaman untuk menghapus filter
+          window.location.href = window.location.pathname;
+      });
+    </script>
     <script src="script.js"></script>
     <!-- Main JS -->
     <script src="assets/js/script.js"></script>

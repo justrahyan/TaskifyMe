@@ -56,6 +56,33 @@ section .container .content .heading-page .line {
   width: 5px;
   height: 32px;
 }
+section .container .content .add-filter .filter-select img {
+  width: 20px;
+  height: 20px;
+}
+section .container .content .add-filter .filter-select #filtering {
+  width: 180px;
+  padding: 8px 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  color: #333;
+  font-size: 14px;
+  appearance: none;
+  cursor: pointer;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+section .container .content .add-filter .filter-select #filtering:hover {
+  border-color: #aaa;
+  background-color: #fff;
+}
+
+section .container .content .add-filter .filter-select #filtering:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
 section .container .content table {
   width: 100%;
   border-spacing: 0 10px;
@@ -89,4 +116,13 @@ section .container .content table .btn-print {
 section .container .content table .btn-print img {
   width: 24px;
   height: 24px;
+}
+.modal .modal-dialog .modal-content .modal-body .btn-save {
+  background-color: var(--primary);
+  color: var(--white);
+  font-size: 14px;
+}
+.modal .modal-dialog .modal-content .modal-body .btn-save,
+.modal .modal-dialog .modal-content .modal-body .btn-secondary {
+  width: 49%;
 }

@@ -90,3 +90,41 @@ section .container .content table .btn-detail img {
   width: 24px;
   height: 24px;
 }
+.modal .modal-dialog {
+  min-width: 750px;
+}
+.modal .modal-dialog .modal-content .modal-body .description img {
+  width: 24px;
+  height: 24px;
+}
+.modal .modal-dialog .modal-content .modal-body textarea {
+  height: 100px;
+  width: 100%;
+}
+.modal .modal-dialog .modal-content .modal-body .btn-save {
+  background-color: var(--primary);
+  color: var(--white);
+  font-size: 14px;
+}
+.modal .modal-dialog .modal-content .modal-body .menu-container {
+  width: 30%;
+}
+.modal .modal-dialog .modal-content .modal-body .menu .menu-icon {
+  width: 32px;
+}
+.modal .modal-dialog .modal-content .modal-body .menu .menu-icon img {
+  width: 65%;
+}
+.modal .modal-dialog .modal-content .modal-body .arrow {
+  height: auto;
+  width: 32px;
+}
+.modal .modal-dialog .modal-content .modal-header h6 {
+  font-size: 1rem;
+  font-weight: bold;
+}
+.form-select,
+.form-control {
+  min-height: 40px;
+  border-radius: 8px;
+}
