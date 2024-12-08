@@ -10,14 +10,6 @@
       header("location:login.php");
       exit();
   }
-
-  // Ambil ID dari URL jika ada
-  $taskDetail = null;
-  if (isset($_GET['id'])) {
-      $id = intval($_GET['id']); // Sanitasi input
-      $result = mysqli_query($koneksi, "SELECT * FROM task WHERE id = '$id' AND user_id = '$id_user'");
-      $taskDetail = mysqli_fetch_assoc($result);
-  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -514,6 +506,9 @@
           $(document).on('input', '.description-input', function () {
               const $textarea = $(this);
               const $saveButton = $(`.save-description-btn[data-task-id="${$textarea.data('task-id')}"]`);
+              
+              // Sembunyikan tombol lain
+              $('.btn-save').not($saveButton).hide();
               $saveButton.toggle($textarea.val().trim() !== '');
           });
 
@@ -533,7 +528,6 @@
                           // Refresh halaman
                           location.reload();
                       } else {
-                          // Jika update gagal, bisa tambahkan error handling di sini
                           alert('Gagal memperbarui data');
                       }
                   },
@@ -565,6 +559,8 @@
                   const $saveButton = $(`.save-${attribute}-btn[data-task-id="${taskId}"]`);
                   const originalValue = $select.data('original-value') || '';
 
+                  // Sembunyikan tombol simpan lainnya
+                  $('.btn-save').not($saveButton).hide();
                   $saveButton.toggle($select.val() !== originalValue);
               });
 
@@ -585,66 +581,65 @@
           createDynamicUpdateHandler('.categories-select', 'categories');
           createDynamicUpdateHandler('.deadline-select', 'deadline');
           createDynamicUpdateHandler('.priority-select', 'priority');
-
-          // Tambah Kategori baru
-          $(document).ready(function() {
-              // Menambahkan kategori baru
-              $('.add-category-btn').click(function() {
-                  var newCategory = $('.new-category-input').val().trim();
-
-                  if (newCategory !== "") {
-                      // Mengirim data kategori ke server menggunakan AJAX
-                      $.ajax({
-                          url: './task-process/add_category.php',
-                          method: 'POST',
-                          contentType: 'application/json',
-                          data: JSON.stringify({ name: newCategory, user_id: <?php echo $_SESSION['id_user']; ?> }),
-                          success: function(response) {
-                              var data = JSON.parse(response);
-                              console.log(data); // Tambahkan log untuk melihat hasil respon dari server
-                              if (data.success) {
-                                  var newOption = $('<option></option>').text(newCategory).val(data.id);
-                                  $('.categories-select').append(newOption);
-                                  $('.new-category-input').val('');
-                              } else {
-                                  alert(data.message);
-                              }
-                          },
-                          error: function() {
-                              alert("Terjadi kesalahan, coba lagi.");
-                          }
-                      });
-                  } else {
-                      alert('Kategori tidak boleh kosong.');
-                  }
-              });
-
-              // Memuat kategori saat halaman dimuat
-              loadCategories();
-
-              function loadCategories() {
-                  $.ajax({
-                      url: './task-process/get_categories.php', // Pastikan URL ini sesuai
-                      method: 'GET',
-                      success: function(response) {
-                          var data = JSON.parse(response);
-                          if (data.success && data.categories.length > 0) {
-                              $.each(data.categories, function(index, category) {
-                                  var newOption = $('<option></option>').text(category.name).val(category.id);
-                                  $('.categories-select').append(newOption);
-                              });
-                          } else {
-                              $('.categories-select').append('<option disabled>Belum ada kategori yang dibuat</option>');
-                          }
-                      },
-                      error: function() {
-                          alert("Gagal memuat kategori.");
-                      }
-                  });
-              }
-          });
       });
 
+
+      // Tambah Kategori baru
+      // $(document).ready(function() {
+      //     // Menambahkan kategori baru
+      //     $('.add-category-btn').click(function() {
+      //         var newCategory = $('.new-category-input').val().trim()
+      //         if (newCategory !== "") {
+      //             var dataToSend = { name: newCategory, user_id: <?php echo $_SESSION['id_user']; ?> };
+      //             console.log("Data yang dikirim:", dataToSend);
+      //             // Mengirim data kategori ke server menggunakan AJAX
+      //             $.ajax({
+      //                 url: './task-process/add_category.php',
+      //                 method: 'POST',
+      //                 contentType: 'application/json',
+      //                 data: JSON.stringify( dataToSend ),
+      //                 success: function(response) {
+      //                     var data = JSON.parse(response);
+      //                     console.log(data); // Tambahkan log untuk melihat hasil respon dari server
+      //                     if (data.success) {
+      //                         var newOption = $('<option></option>').text(newCategory).val(data.id);
+      //                         $('.categories-select').append(newOption);
+      //                         $('.new-category-input').val('');
+      //                     } else {
+      //                         alert(data.message);
+      //                     }
+      //                 },
+      //                 error: function() {
+      //                     alert("Terjadi kesalahan, coba lagi.");
+      //                 }
+      //             });
+      //         } else {
+      //             alert('Kategori tidak boleh kosong.');
+      //         }
+      //     });
+      //     // Memuat kategori saat halaman dimuat
+      //     loadCategories();
+      //     function loadCategories() {
+      //         $.ajax({
+      //             url: './task-process/get_categories.php', // Pastikan URL ini sesuai
+      //             method: 'GET',
+      //             success: function(response) {
+      //                 var data = JSON.parse(response);
+      //                 if (data.success && data.categories.length > 0) {
+      //                     $.each(data.categories, function(index, category) {
+      //                         var newOption = $('<option></option>').text(category.name).val(category.id);
+      //                         $('.categories-select').append(newOption);
+      //                     });
+      //                 } else {
+      //                     $('.categories-select').append('<option disabled>Belum ada kategori yang dibuat</option>');
+      //                 }
+      //             },
+      //             error: function() {
+      //                 alert("Gagal memuat kategori.");
+      //             }
+      //         });
+      //     }
+      // });
     </script>
 
     <script src="script.js"></script>

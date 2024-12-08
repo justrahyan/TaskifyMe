@@ -139,7 +139,7 @@
                     </tr>
                     <?php
                       $no = 1;
-                      $sql = mysqli_query($koneksi, "SELECT * FROM task WHERE user_id = '$id_user' AND deadline <= DATE_ADD(CURDATE(), INTERVAL 5 DAY) ORDER BY id desc LIMIT 5");
+                      $sql = mysqli_query($koneksi, "SELECT * FROM task WHERE user_id = '$id_user' AND deadline <= DATE_ADD(CURDATE(), INTERVAL 5 DAY) AND (status IS NULL OR status != 3) ORDER BY id desc LIMIT 5");
                       while ($row = mysqli_fetch_assoc($sql)) {
                     ?>
                     <tr class="data rounded">

@@ -59,6 +59,12 @@ section .container .content .heading-page .line {
 section .container .content .user-info .profile {
   width: 30%;
 }
+section .container .content .user-info .profile .image-container {
+  aspect-ratio: 1/1;
+  overflow: hidden;
+  width: 317.7px;
+  height: 317.7px;
+}
 section .container .content .user-info .profile img {
   width: 100%;
 }
@@ -72,7 +78,7 @@ section .container .content .user-info .profile p {
   font-size: 12px;
 }
 section .container .content .user-info .information {
-  width: 100%;
+  width: 70%;
 }
 section .container .content .user-info .information table .btn-change {
   color: var(--primary);
@@ -82,4 +88,29 @@ section .container .content .user-info .information table .btn-change {
 }
 section .container .content .user-info .information table .btn-change:hover {
   text-decoration: underline;
+}
+.modal .modal-dialog .modal-content .modal-body .btn-save {
+  background-color: var(--primary);
+  color: var(--white);
+  font-size: 14px;
+}
+.modal .modal-dialog .modal-content .modal-body .toggle-password {
+  position: absolute;
+  top: 70%;
+  right: 15px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #b4b4b4;
+  font-size: 16px;
+}
+.modal .modal-dialog .modal-content .modal-body .toggle-password:hover {
+  color: #333;
+}
+@media screen and (max-width: 992px) {
+  section .container .content .user-info .profile {
+    width: 100%;
+  }
+  section .container .content .user-info .information {
+    width: 100%;
+  }
 }
