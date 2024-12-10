@@ -6,6 +6,19 @@ if(isset($_POST['click_view_btn'])){
     $id_pengguna = $_POST['user_id'];
     $id_tugas = $_POST['id_task'];
 
+    // Query untuk mengambil kategori berdasarkan user_id
+    $kategori_query = mysqli_query($koneksi, "SELECT id, name FROM categories WHERE user_id = '$id_pengguna'");
+    $kategori_options = '';
+
+    while ($kategori_row = mysqli_fetch_assoc($kategori_query)) {
+        $kategori_options .= '<option value="' . $kategori_row['id'] . '">' . htmlspecialchars($kategori_row['name']) . '</option>';
+    }
+
+    // Jika tidak ada kategori, tampilkan opsi default
+    if (empty($kategori_options)) {
+        $kategori_options = '<option value="">Tidak ada kategori tersedia</option>';
+    }
+
     // echo $nama_tugas;
     $sql = mysqli_query($koneksi, "SELECT * FROM task WHERE user_id = '$id_pengguna' AND id = '$id_tugas'");
     if(mysqli_num_rows($sql) > 0){
@@ -39,14 +52,14 @@ if(isset($_POST['click_view_btn'])){
                         <button type="button" class="btn btn-save p-2 save-status-btn w-100" style="display: none;" data-task-id="' . $row['id'] . '">Simpan</button>
                     </div>
                     <div class="categories-form">
-                        <form action="./category-process/add_category.php" method="post">
-                            <input type="text" class="form-control new-category-input mb-2" placeholder="Masukkan kategori baru" />
-                            <button type="button" class="btn btn-save p-2 add-category-btn w-100">Tambah Kategori</button>
+                        <form id="category-form" action="category-process/add_category.php" method="POST" class="mb-3">
+                            <input type="text" class="form-control new-category-input mb-2" name="category_name" placeholder="Masukkan kategori" required />
+                            <button type="submit" class="btn btn-save p-2 add-category-btn w-100">Tambah Kategori</button>
                         </form>
                         <select class="form-select categories-select mb-2" aria-label="Kategori" data-task-id="' . $row['id'] . '">
-                            <option selected>Pilih Kategori</option>
-                            <!-- Kategori akan diisi melalui AJAX -->
-                        </select>
+                            <option selected>Pilih Kategori</option>'
+                            . $kategori_options .
+                        '</select>
                         <button type="button" class="btn btn-save p-2 save-categories-btn w-100" style="display: none;" data-task-id="' . $row['id'] . '">Simpan</button>
                     </div>
                     <div class="deadline-form">

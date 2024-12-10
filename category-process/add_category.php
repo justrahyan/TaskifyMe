@@ -1,33 +1,38 @@
 <?php
 session_start();
+ob_start(); 
 include '../koneksi.php';
+$id_user = $_SESSION['id_user'];
 
-// Mengecek apakah user sudah terdaftar dalam session
-if (isset($_SESSION['id_user'])) {
-    $user_id = $_SESSION['id_user'];
-} else {
-    echo json_encode(['success' => false, 'message' => 'User tidak terdaftar']);
-    exit();
-}
+if (isset($_POST['category_name'])) {
+    $category_name = mysqli_real_escape_string($koneksi, $_POST['category_name']);
 
-// Mengambil data JSON yang dikirim
-$data = json_decode(file_get_contents('php://input'), true);
-var_dump($data);
+    // Cek jika kategori sudah ada
+    $check = mysqli_query($koneksi, "SELECT * FROM categories WHERE name = '$category_name'");
+    if (mysqli_num_rows($check) == 0) {
+        // Insert kategori baru
+        $query = "INSERT INTO categories (name, user_id) VALUES ('$category_name','$id_user')";
+        $result = mysqli_query($koneksi, $query);
 
-// Validasi input
-if (isset($data['name']) && !empty($data['name'])) {
-    $name = mysqli_real_escape_string($koneksi, trim($data['name']));  // Sanitize input
-
-    // Menyusun query untuk menambahkan kategori
-    $query = "INSERT INTO categories (user_id, name) VALUES ('$user_id', '$name')";
-    
-    if (mysqli_query($koneksi, $query)) {
-        // Mengembalikan response sukses dengan ID kategori yang baru
-        echo json_encode(['success' => true, 'id' => mysqli_insert_id($koneksi)]);
+        if ($result) {
+            $category_id = mysqli_insert_id($koneksi);
+            $_SESSION['status-task'] = 'Kategori berhasil ditambahkan!';
+            header("location: ../tugas-saya.php"); // Redirect ke halaman tugas-saya.php setelah menambah kategori baru
+            echo json_encode(['success' => true, 'category_id' => $category_id, 'category_name' => $category_name]);
+        } else {
+            $_SESSION['error-task'] = 'Terjadi kesalahan saat menambahkan kategori.';
+            header("location: ../tugas-saya.php"); // Redirect ke halaman tugas-saya.php ketika terjadi kesalahan saat menambah kategori baru
+            echo json_encode(['success' => false, 'message' => 'Error inserting category']);
+        }
     } else {
-        echo json_encode(['success' => false, 'message' => 'Database error: ' . mysqli_error($koneksi)]);
+        $_SESSION['error-task'] = 'Kategori sudah ada.';
+        header("location: ../tugas-saya.php"); // Redirect ke halaman tugas-saya.php ketika kategori sudah ada
+        echo json_encode(['success' => false, 'message' => 'Category already exists']);
     }
 } else {
-    echo json_encode(['success' => false, 'message' => 'Invalid input']);
+    $_SESSION['error-task'] = 'Nama kategori diperlukan.';
+    header("location: ../tugas-saya.php"); // Redirect ke halaman tugas-saya.php ketika nama kategori belum dimasukkan
+    echo json_encode(['success' => false, 'message' => 'Category name is required']);
 }
+exit();
 ?>

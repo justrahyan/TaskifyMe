@@ -173,7 +173,12 @@
                 $totalPages = ceil($totalTasks / $tasksPerPage);
 
                 // Mulai query dasar
-                $query = "SELECT * FROM task WHERE user_id = '$id_user' AND (status IS NULL OR status != 3) LIMIT $offset, $tasksPerPage";
+                $query = "SELECT t.*, c.name 
+                FROM task t
+                LEFT JOIN categories c ON t.categories = c.id
+                WHERE t.user_id = '$id_user' 
+                AND (t.status IS NULL OR t.status != 3) 
+                LIMIT $offset, $tasksPerPage";
 
                 // Menambahkan filter berdasarkan rentang tanggal
                 if (!empty($startDate) && !empty($endDate)) {
@@ -287,7 +292,7 @@
                 <td
                   scope="col"
                 >
-                  <?php echo $row['categories'] ?>
+                  <?php echo $row['name'] ?>
                 </td>
                 <td
                   scope="col"
@@ -389,6 +394,15 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body d-flex flex-column gap-4">
+                  <?php
+                    if (isset($_SESSION['status-task']) && $_SESSION['status-task'] != '') {
+                        echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <strong>Berhasil! </strong>' . htmlspecialchars($_SESSION['status-task']) . 
+                                '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                              </div>';
+                        unset($_SESSION['status-task']); // Menghapus pesan setelah ditampilkan
+                    }
+                  ?>
                   <div class="view_task_data">
                   </div>
               </div>
@@ -621,63 +635,46 @@
 
 
       // Tambah Kategori baru
-      $(document).ready(function() {
-          // Menambahkan kategori baru
-          $(document).on('click', '.save-description-btn', function() {
-              const newCategory = $(`.new-category-input[data-task-id="${taskId}"]`).val().trim();
-              if (newCategory !== "") {
-                  var dataToSend = { name: newCategory};
-                  console.log("Data yang dikirim:", dataToSend);
-                  // Mengirim data kategori ke server menggunakan AJAX
+      $(document).ready(function () {
+          const categorySelect = $('.categories-select');
+          const categoryForm = $('#category-form');
+          const newCategoryInput = $('.new-category-input');
+
+          console.log(categorySelect);
+
+          categoryForm.on('submit', function (event) {
+              event.preventDefault();
+              const categoryName = newCategoryInput.val().trim();
+              if (categoryName) {
                   $.ajax({
-                      url: './category-process/add_category.php',
+                      url: categoryForm.attr('action'),
                       method: 'POST',
-                      contentType: 'application/json',
-                      data: JSON.stringify({
-                        dataToSend,
-                      }),
-                      success: function(response) {
-                          var data = JSON.parse(response);
-                          console.log(data); // Tambahkan log untuk melihat hasil respon dari server
-                          if (data.success) {
-                              var newOption = $('<option></option>').text(newCategory).val(data.id);
-                              $('.categories-select').append(newOption);
-                              $('.new-category-input').val('');
+                      dataType: 'json',
+                      data: { 
+                          category_name: categoryName,
+                      },
+                      success: function (response) {
+                          if (response.success) {
+                              const newOption = $('<option></option>').val(response.category_id).text(response.category_name);
+                              categorySelect.append(newOption);
+                              categorySelect.val(response.category_id);
+                              newCategoryInput.val('');
                           } else {
-                              alert(data.message);
+                              alert(response.message);
                           }
                       },
-                      error: function() {
-                          alert("Terjadi kesalahan, coba lagi.");
+                      error: function (jqXHR, textStatus, errorThrown) {
+                          console.error('AJAX error:', textStatus, errorThrown);
+                          alert('Terjadi kesalahan, coba lagi');
                       }
                   });
               } else {
-                  alert('Kategori tidak boleh kosong.');
+                  alert('Kategori tidak boleh kosong!');
               }
           });
-          // Memuat kategori saat halaman dimuat
-          loadCategories();
-          function loadCategories() {
-              $.ajax({
-                  url: './category-process/get_categories.php', // Pastikan URL ini sesuai
-                  method: 'GET',
-                  success: function(response) {
-                      var data = JSON.parse(response);
-                      if (data.success && data.categories.length > 0) {
-                          $.each(data.categories, function(index, category) {
-                              var newOption = $('<option></option>').text(category.name).val(category.id);
-                              $('.categories-select').append(newOption);
-                          });
-                      } else {
-                          $('.categories-select').append('<option disabled>Belum ada kategori yang dibuat</option>');
-                      }
-                  },
-                  error: function() {
-                      alert("Gagal memuat kategori.");
-                  }
-              });
-          }
       });
+
+
     </script>
 
     <script src="script.js"></script>
