@@ -312,14 +312,15 @@
                 <div class="modal-body">
                     <?php
                       // Error message
-                      if (isset($_SESSION['error-password']) && $_SESSION['error-password'] != '') {
-                        echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <strong>Gagal!</strong> ' . htmlspecialchars($_SESSION['error-password']) . '
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                              </div>';
-                        unset($_SESSION['error-password']);
-                      }
+                    //   if (isset($_SESSION['error-old-password']) && $_SESSION['error-old-password'] != '') {
+                    //     echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    //             <strong>Gagal!</strong> ' . htmlspecialchars($_SESSION['error-old-password']) . '
+                    //             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    //           </div>';
+                    //     unset($_SESSION['error-old-password']);
+                    //   }
                     ?>
+                    <div id="error-message-container"></div>
                     <form id="edit-password-form" method="POST" action="update-password.php">
                         <div class="mb-3">
                             <label for="old-password" class="form-label">Masukkan Password Lama</label>
@@ -505,7 +506,17 @@
                         // Reload the page or show a success message
                         location.reload();
                     } else {
-                        alert('Terjadi kesalahan saat mengubah kata sandi: ' + data.message);
+                        // Tampilkan pesan error di elemen HTML
+                        if (data.message) {
+                            $('#error-message-container').html(
+                                '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                                '<strong>Gagal!</strong> ' + data.message +
+                                '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                                '</div>'
+                            );
+                        } else {
+                            alert('Terjadi kesalahan saat mengubah kata sandi: ' + data.message);
+                        }
                     }
                 },
                 error: function () {

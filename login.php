@@ -1,3 +1,51 @@
+<?php
+session_start();
+include './koneksi.php';
+
+// Inisialisasi variabel error
+$errors = [];
+
+// Cek apakah form login disubmit
+if (isset($_POST['login'])) {
+    // Ambil dan bersihkan input
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
+
+    // Validasi username
+    if (empty($username)) {
+        $errors['username'] = 'Nama pengguna tidak boleh kosong';
+    }
+
+    // Validasi password
+    if (empty($password)) {
+        $errors['password'] = 'Kata sandi tidak boleh kosong';
+    }
+
+    // Jika tidak ada error, lakukan proses login
+    if (empty($errors)) {
+      // Query langsung tanpa prepared statement
+      $query = "SELECT * FROM user WHERE username = '$username' AND password = '$password'";
+      $result = mysqli_query($koneksi, $query);
+  
+      if ($result && mysqli_num_rows($result) > 0) {
+          // Login berhasil
+          $user = mysqli_fetch_assoc($result);
+          $_SESSION['userweb'] = $username;
+          $_SESSION['id_user'] = $user['id'];
+
+          // Set session untuk pesan selamat datang
+          $_SESSION['welcome_message'] = "Selamat datang, " . htmlspecialchars($username) . "! Anda berhasil login.";
+          echo $_SESSION['welcome_message'];
+          header("location:./index.php");
+          exit();
+      } else {
+          // Login gagal
+          $errors['login'] = 'Username atau password salah';
+      }
+    }  
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -49,24 +97,47 @@
 
     <!-- Main CSS -->
     <link rel="stylesheet" href="assets/css/form-account.css">
+    <style>
+      .error-message {
+        color: red;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+      }
+    </style>
   </head>
   <body>
     <section class="container">
         <div class="d-flex flex-row content p-4">
             <div class="w-50 form-input d-flex flex-column justify-content-center align-items-start">
-                <form action="login.php" method="post">
+                <form action="" method="post">
                     <h1 class="fw-bold mb-4">Login ke Akun anda</h1>
                     <p class="mb-4">Selamat datang! Silahkan login terlebih dahulu.</p>
+                    
+                    <?php if (isset($errors['login'])): ?>
+                        <div class="alert alert-danger mb-3"><?php echo $errors['login']; ?></div>
+                    <?php endif; ?>
+
                     <div class="mb-3">
-                        <label for="FormControlUsername" class="form-label">Nama Pengguna</label>
-                        <input type="text" class="form-control" name="username" id="FormControlUsername" placeholder="Masukkan nama pengguna anda">
+                        <label for="FormControlUsername" class="form-label">Nama Pengguna <span class="text-danger">*</span></label>
+                        <input 
+                            type="text" 
+                            class="form-control <?php echo isset($errors['username']) ? 'is-invalid' : ''; ?>" 
+                            name="username" 
+                            id="FormControlUsername" 
+                            placeholder="Masukkan nama pengguna anda" 
+                            value="<?php echo htmlspecialchars($username ?? ''); ?>"
+                        >
+                        <?php if (isset($errors['username'])): ?>
+                            <div class="error-message"><?php echo $errors['username']; ?></div>
+                        <?php endif; ?>
                     </div>
                     <div class="mb-4">
-                        <label for="FormControlPassword" class="form-label">Kata Sandi</label>
+                        <label for="FormControlPassword" class="form-label">Kata Sandi <span class="text-danger">*</span></label>
                         <div class="password-wrapper">
                             <input 
                                 type="password" 
-                                class="form-control" name="password" 
+                                class="form-control <?php echo isset($errors['password']) ? 'is-invalid' : ''; ?>" 
+                                name="password" 
                                 id="FormControlPassword" 
                                 placeholder="Masukkan kata sandi anda"
                             >
@@ -74,6 +145,9 @@
                                 <i class="fas fa-eye"></i>
                             </span>
                         </div>
+                        <?php if (isset($errors['password'])): ?>
+                            <div class="error-message"><?php echo $errors['password']; ?></div>
+                        <?php endif; ?>
                     </div>
                     <button type="submit" name="login" class="btn-submit text-white fw-semibold rounded mb-5">Login</button>
                 </form>
@@ -85,29 +159,26 @@
         </div>
     </section>
 
-    <?php
-    if (isset($_POST['login'])) {
-        session_start();
-        include './koneksi.php';
-
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-
-        $cekuser = mysqli_query($koneksi, "SELECT * FROM user WHERE username = '$username' AND password = '$password'");
-        $level = mysqli_num_rows($cekuser);
-        if ($level > 0) {
-                $user = mysqli_fetch_assoc($cekuser);
-                $_SESSION['userweb'] = $username;
-                $_SESSION['id_user'] = $user['id'];
-                header("location:./index.php");
-        } else {
-            echo "<script>alert('username atau password Anda salah. Silahkan coba lagi!')</script>";
-        }
-    }
-    ?>
-    
     <!-- Main JS -->
     <script src="assets/js/script.js"></script>
+
+    <script>
+    // Password Toggle Login and Register
+    function togglePasswordVisibility() {
+      const passwordInput = document.getElementById("FormControlPassword");
+      const toggleIcon = document.querySelector(".toggle-password i");
+
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        toggleIcon.classList.remove("fa-eye");
+        toggleIcon.classList.add("fa-eye-slash");
+      } else {
+        passwordInput.type = "password";
+        toggleIcon.classList.remove("fa-eye-slash");
+        toggleIcon.classList.add("fa-eye");
+      }
+    }
+    </script>
 
     <!-- Bootstrap CDN-->
     <script

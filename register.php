@@ -6,13 +6,31 @@
     $username = $_POST['username'];
     $email = $_POST['email'];
     $password = $_POST['password'];
-    $sql =  "INSERT INTO user(fullname, username, email, password)
-    VALUES ('$fullname','$username','$email','$password')";
-    if ($koneksi->query($sql) === true) {
-        header("location:./login.php");
-        exit();
+
+    // Memerika username dan password
+    $checkQuery = "SELECT * FROM user WHERE username = '$username' OR email = '$email'";
+    $result = $koneksi->query($checkQuery);
+
+    if ($result->num_rows > 0) {
+        $error = [];
+        while ($row = $result->fetch_assoc()) {
+            if ($row['username'] === $username) {
+                $error['username'] = "Nama pengguna tidak tersedia";
+            }
+            if ($row['email'] === $email) {
+                $error['email'] = "Email tidak tersedia";
+            }
+        }
     } else {
-      echo "Error: " . mysqli_error($koneksi);
+      $sql =  "INSERT INTO user(fullname, username, email, password)
+      VALUES ('$fullname','$username','$email','$password')";
+      if ($koneksi->query($sql) === true) {
+        $_SESSION['status'] = "success";
+        $_SESSION['message'] = "Akun berhasil dibuat. Silakan login.";
+      } else {
+        $_SESSION['status'] = "error";
+        $_SESSION['message'] = "Terjadi kesalahan: " . mysqli_error($koneksi);
+      }
     }
     $koneksi->close();
   }
@@ -76,26 +94,43 @@
                 <form action="" method="post">
                   <h1 class="fw-bold mb-4">Buat Akun anda</h1>
                   <p class="mb-4">Selamat datang! Silahkan buat akun anda terlebih dahulu.</p>
+                  <?php
+                  if (isset($_SESSION['status'])) {
+                      $alertType = $_SESSION['status'] === "success" ? "alert-success" : "alert-danger";
+                      echo "<div class='alert $alertType' role='alert'>
+                              " . $_SESSION['message'] . "
+                            </div>";
+                      unset($_SESSION['status']);
+                      unset($_SESSION['message']);
+                  }
+                  ?>
                   <div class="mb-3">
-                      <label for="FormControlEmail" class="form-label">Nama Lengkap</label>
-                      <input type="text" class="form-control" name="fullname" id="FormControlEmail" placeholder="Masukkan nama lengkap anda">
+                      <label for="FormControlEmail" class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" name="fullname" id="FormControlEmail" placeholder="Masukkan nama lengkap anda" required>
+                      <p class="fst-italic mt-1" style="font-size: 12px;">Masukkan nama lengkap dengan benar, data tidak bisa diubah.</p>
                   </div>
                   <div class="mb-3">
-                      <label for="FormControlEmail" class="form-label">Nama Pengguna</label>
-                      <input type="text" class="form-control" name="username" id="FormControlEmail" placeholder="Masukkan nama pengguna anda">
+                      <label for="FormControlEmail" class="form-label">Nama Pengguna <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control <?= isset($error['username']) ? 'is-invalid' : '' ?>" name="username" id="FormControlEmail" placeholder="Masukkan nama pengguna anda" value="<?= htmlspecialchars($_POST['username'] ?? '') ?>" required>
+                      <?php if (isset($error['username'])): ?>
+                          <div class="invalid-feedback"><?= $error['username'] ?></div>
+                      <?php endif; ?>
                   </div>
                   <div class="mb-3">
-                      <label for="FormControlEmail" class="form-label">Email</label>
-                      <input type="email" class="form-control" name="email" id="FormControlEmail" placeholder="Masukkan email anda">
+                      <label for="FormControlEmail" class="form-label">Email <span class="text-danger">*</span></label>
+                      <input type="email" class="form-control <?= isset($error['email']) ? 'is-invalid' : '' ?>" name="email" id="FormControlEmail" placeholder="Masukkan email anda" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"  required>
+                      <?php if (isset($error['email'])): ?>
+                          <div class="invalid-feedback"><?= $error['email'] ?></div>
+                      <?php endif; ?>
                   </div>
                   <div class="mb-4">
-                      <label for="FormControlPassword" class="form-label">Kata Sandi</label>
+                      <label for="FormControlPassword" class="form-label">Kata Sandi <span class="text-danger">*</span></label>
                       <div class="password-wrapper">
                           <input 
                               type="password" 
                               class="form-control" name="password" 
                               id="FormControlPassword" 
-                              placeholder="Masukkan kata sandi anda"
+                              placeholder="Masukkan kata sandi anda" required
                           >
                           <span class="toggle-password" onclick="togglePasswordVisibility()">
                               <i class="fas fa-eye"></i>

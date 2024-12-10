@@ -243,7 +243,7 @@
                   <?php echo $row['deadline'] ?>
                 </td>
                 <td scope="col" class="d-flex gap-2">
-                  <a href="task-process/print_task.php"
+                  <a href="task-process/print_task.php?task_id=<?php echo $row['id']; ?>"
                     class="btn btn-print"
                   >
                     <img src="assets/img/icon/printer.png" alt="Print Task" />

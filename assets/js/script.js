@@ -13,24 +13,6 @@ document.addEventListener("click", (event) => {
 
 // ==========================
 
-// Password Toggle Login and Register
-function togglePasswordVisibility() {
-  const passwordInput = document.getElementById("FormControlPassword");
-  const toggleIcon = document.querySelector(".toggle-password i");
-
-  if (passwordInput.type === "password") {
-    passwordInput.type = "text";
-    toggleIcon.classList.remove("fa-eye");
-    toggleIcon.classList.add("fa-eye-slash");
-  } else {
-    passwordInput.type = "password";
-    toggleIcon.classList.remove("fa-eye-slash");
-    toggleIcon.classList.add("fa-eye");
-  }
-}
-
-// ==========================
-
 // Password Toggle di modal form password baru (settings.php)
 document
   .getElementById("toggle-password")

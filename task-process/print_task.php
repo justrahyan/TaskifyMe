@@ -1,6 +1,7 @@
 <?php
 session_start();
 $koneksi = mysqli_connect("localhost", "root", "", "taskifyme");
+$task_id = isset($_GET['task_id']) ? $_GET['task_id'] : null;
 
 // Koneksi library FPDF
 require('library/fpdf.php');
@@ -29,7 +30,7 @@ $pdf->Cell(50, 6, 'Prioritas', 1, 1, 'C');
 $pdf->SetFont('helvetica', '', 10);
 $no = 1;
 $id_user = $_SESSION['id_user'];
-$query = mysqli_query($koneksi, "SELECT * FROM task WHERE user_id = '$id_user'");
+$query = mysqli_query($koneksi, "SELECT * FROM task WHERE id = '$task_id' AND user_id = '$id_user'");
 while ($row = mysqli_fetch_array($query)) {
     if($row['status'] == 1){
         $status = "Belum Dikerja";

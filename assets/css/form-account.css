@@ -75,3 +75,12 @@ section .content .btn-register a {
 section .content .btn-register a:hover {
   text-decoration: underline;
 }
+
+/* Register Validation */
+.is-invalid {
+  border-color: #dc3545 !important;
+}
+.invalid-feedback {
+  color: #dc3545 !important;
+  font-size: 0.875em;
+}

@@ -36,13 +36,10 @@ if (isset($data['username'])) {
 
         // Verify if old password matches the current password in the database
         if ($oldPassword !== $currentPassword) {
-            // Mengatur pesan error di dalam sesi
-            $_SESSION['error-password'] = "Password lama salah.";
-            echo json_encode(['success' => false, 'message' => $_SESSION['error-password']]);
+            echo json_encode(['success' => false, 'message' => "Password lama salah."]);
             exit();
         } elseif ($newPassword !== $confirmPassword) {
-            $_SESSION['error-password'] = "Konfirmasi password tidak cocok.";
-            echo json_encode(['success' => false, 'message' => $_SESSION['error-password']]);
+            echo json_encode(['success' => false, 'message' => "Konfirmasi password tidak cocok."]);
             exit();
         } else {
             // No hashing needed, directly use the new password

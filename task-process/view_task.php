@@ -39,7 +39,7 @@ if(isset($_POST['click_view_btn'])){
                         <button type="button" class="btn btn-save p-2 save-status-btn w-100" style="display: none;" data-task-id="' . $row['id'] . '">Simpan</button>
                     </div>
                     <div class="categories-form">
-                        <form action="./task-process/add_category.php" method="post">
+                        <form action="./category-process/add_category.php" method="post">
                             <input type="text" class="form-control new-category-input mb-2" placeholder="Masukkan kategori baru" />
                             <button type="button" class="btn btn-save p-2 add-category-btn w-100">Tambah Kategori</button>
                         </form>
