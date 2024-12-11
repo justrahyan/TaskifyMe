@@ -181,9 +181,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         tasks.overdue.forEach(function(task) {
                             taskList.append(`
                                 <li class="list-group-item list-group-item-danger sticky-top">
-                                    <strong>${task.task_name || 'Tugas Tanpa Judul'}</strong>
-                                    <p>${task.description || 'Tidak ada deskripsi'}</p>
-                                    <small>Deadline: ${task.deadline || 'Tidak ada tanggal'}</small>
+                                    <div class="d-flex flex-row align-items-start justify-content-between">
+                                      <div class="notification-title"
+                                        <strong>${task.task_name || 'Tugas Tanpa Judul'}</strong>
+                                        <p>${task.description || 'Tidak ada deskripsi'}</p>
+                                      </div>
+                                      <small>Deadline: ${task.deadline || 'Tidak ada tanggal'}</small>
+                                    </div>
                                 </li>
                             `);
                         });
@@ -196,9 +200,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         tasks.upcoming.forEach(function(task) {
                             taskList.append(`
                                 <li class="list-group-item">
-                                    <strong>${task.task_name || 'Tugas Tanpa Judul'}</strong>
-                                    <p>${task.description || 'Tidak ada deskripsi'}</p>
-                                    <small>Deadline: ${task.deadline || 'Tidak ada tanggal'}</small>
+                                    <div class="d-flex flex-row align-items-start justify-content-between">
+                                      <div class="notification-title"
+                                        <strong>${task.task_name || 'Tugas Tanpa Judul'}</strong>
+                                        <p>${task.description || 'Tidak ada deskripsi'}</p>
+                                      </div>
+                                      <small>Deadline: ${task.deadline || 'Tidak ada tanggal'}</small>
+                                    </div>
                                 </li>
                             `);
                         });

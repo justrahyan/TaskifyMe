@@ -89,9 +89,9 @@
                       </path>
                     </svg>
                   </div>
-                  <form action="" method="GET">
+                  <form action="" method="GET" id="searchForm">
                     <input type="search" name="search" placeholder="Cari nama tugas" 
-                      class="form-control ps-5 py-2 border rounded w-100 w-lg-50">
+                      class="form-control ps-5 py-2 border rounded w-100 w-lg-50" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
                   </form>
                 </div>
               </div>
@@ -448,9 +448,9 @@
               <div class="mb-3">
                 <label for="startDate" class="form-label">Rentang Tanggal</label>
                 <div class="d-flex gap-2">
-                  <input type="date" class="form-control" id="startDate" name="startDate">
+                  <input type="date" class="form-control" id="startDate" name="startDate" value="<?php echo htmlspecialchars($startDate); ?>">
                   <span>-</span>
-                  <input type="date" class="form-control" id="endDate" name="endDate">
+                  <input type="date" class="form-control" id="endDate" name="endDate" value="<?php echo htmlspecialchars($endDate); ?>">
                 </div>
               </div>
 
@@ -459,9 +459,9 @@
                 <label for="priority" class="form-label">Prioritas</label>
                 <select class="form-select" id="priority" name="priority">
                   <option value="">Pilih Prioritas</option>
-                  <option value="1">Rendah</option>
-                  <option value="2">Sedang</option>
-                  <option value="3">Tinggi</option>
+                  <option value="1" <?php echo $priority == '1' ? 'selected' : ''; ?>>Rendah</option>
+                  <option value="2" <?php echo $priority == '2' ? 'selected' : ''; ?>>Sedang</option>
+                  <option value="3" <?php echo $priority == '3' ? 'selected' : ''; ?>>Tinggi</option>
                 </select>
               </div>
 
@@ -475,7 +475,9 @@
                   $kategori_query = mysqli_query($koneksi, "SELECT id, name FROM categories WHERE user_id = '$id_user'");
                   while($kategori_row = mysqli_fetch_assoc($kategori_query)){
                   ?>
-                  <option value="<?php echo $kategori_row['id']; ?>"><?php echo $kategori_row['name']; ?></option>
+                  <option value="<?php echo $kategori_row['id']; ?>" <?php echo $selected; ?>>
+                    <?php echo $kategori_row['name']; ?>
+                  </option>
                   <?php } ?>
                 </select>
               </div>
@@ -679,6 +681,16 @@
           });
       });
 
+      // Refresh halaman jika input search kosong
+      $(document).ready(function () {
+          $('#searchForm').on('submit', function (e) {
+              var searchValue = $('input[name="search"]').val().trim();
+              if (searchValue === '') {
+                  e.preventDefault(); // Hentikan pengiriman form
+                  window.location.href = window.location.pathname; // Refresh halaman
+              }
+          });
+      });
 
     </script>
 
