@@ -30,24 +30,39 @@ $pdf->Cell(50, 6, 'Prioritas', 1, 1, 'C');
 $pdf->SetFont('helvetica', '', 10);
 $no = 1;
 $id_user = $_SESSION['id_user'];
-$query = mysqli_query($koneksi, "SELECT * FROM task WHERE id = '$task_id' AND user_id = '$id_user'");
+$query = mysqli_query($koneksi, "
+    SELECT t.*, c.name 
+    FROM task t
+    LEFT JOIN categories c ON t.categories = c.id
+    WHERE t.user_id = '$id_user' 
+    AND t.id = '$task_id'
+");
 while ($row = mysqli_fetch_array($query)) {
     if($row['status'] == 1){
-        $status = "Belum Dikerja";
-      }elseif($row['status'] == 2){
-          $status = "Sedang Dikerja";
-      } elseif($row['status'] == 3){
-          $status = "Selesai";
-      } else {
-        $status = null;
-      }
+      $status = "Belum Dikerja";
+    }elseif($row['status'] == 2){
+        $status = "Sedang Dikerja";
+    } elseif($row['status'] == 3){
+        $status = "Selesai";
+    } else {
+      $status = null;
+    }
+    if($row['priority'] == 1){
+      $priority = "Rendah";
+    }elseif($row['priority'] == 2){
+        $priority = "Sedang";
+    } elseif($row['priority'] == 3){
+        $priority = "Tinggi";
+    } else {
+      $priority = null;
+    }
     $pdf->Cell(20, 6, $no++, 1, 0, 'C');
     $pdf->Cell(70, 6, $row['task_name'], 1, 0, 'C');
     $pdf->Cell(120, 6, $row['description'], 1, 0, 'C');
     $pdf->Cell(50, 6, $status, 1, 0, 'C');
-    $pdf->Cell(50, 6, $row['categories'], 1, 0, 'C');
+    $pdf->Cell(50, 6, $row['name'], 1, 0, 'C');
     $pdf->Cell(40, 6, $row['deadline'], 1, 0, 'C');
-    $pdf->Cell(50, 6, $row['priority'], 1, 1, 'C');
+    $pdf->Cell(50, 6, $priority, 1, 1, 'C');
 }
 
 $pdf->Cell(40, 7, '', 0, 1);

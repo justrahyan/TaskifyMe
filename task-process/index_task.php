@@ -5,6 +5,8 @@ session_start();
 if(isset($_POST['click_view_btn'])){
     $id_pengguna = $_POST['user_id'];
     $id_tugas = $_POST['id_task'];
+    $kategori_query = mysqli_query($koneksi, "SELECT id, name FROM categories WHERE user_id = '$id_pengguna'");
+    $kategori_row = mysqli_fetch_assoc($kategori_query);
 
     $sql = mysqli_query($koneksi, "SELECT * FROM task WHERE user_id = '$id_pengguna' AND id = '$id_tugas'");
     if(mysqli_num_rows($sql) > 0){
@@ -31,7 +33,7 @@ if(isset($_POST['click_view_btn'])){
                         <input type="text" class="form-control status-input mb-2" aria-label="Status" value="' . ($row['status'] == '1' ? 'Belum Dikerja' : ($row['status'] == '2' ? 'Sedang Dikerja' : 'Selesai')) . '" disabled />
                     </div>
                     <div class="categories-form">
-                        <input type="text" class="form-control categories-input mb-2" aria-label="Kategori" value="' . htmlspecialchars($row['categories']) . '" disabled />
+                        <input type="text" class="form-control categories-input mb-2" aria-label="Kategori" value="' . $kategori_row['name'] . '" disabled />
                     </div>
                     <div class="deadline-form">
                         <input type="text" class="form-control deadline-input mb-2" aria-label="Tanggal" value="' . date('Y-m-d', strtotime($row['deadline'])) . '" disabled />

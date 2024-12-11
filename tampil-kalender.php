@@ -11,7 +11,7 @@
         exit();
     }
 
-    $tampil = mysqli_query($koneksi, "SELECT * FROM task WHERE user_id = '$id_user' order by id");
+    $tampil = mysqli_query($koneksi, "SELECT * FROM task WHERE user_id = '$id_user' AND (status IS NULL OR status != 3) ORDER BY id");
 
     $dataArr = array();
     while($data = mysqli_fetch_array($tampil)){

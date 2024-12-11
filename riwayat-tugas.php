@@ -123,7 +123,11 @@
                 $category = isset($_GET['category']) ? $_GET['category'] : '';
 
                 // Mulai query dasar
-                $query = "SELECT * FROM task WHERE user_id = '$id_user' AND status = '3'";
+                $query = "SELECT t.*, c.name 
+                FROM task t
+                LEFT JOIN categories c ON t.categories = c.id
+                WHERE t.user_id = '$id_user' 
+                AND t.status = 3";
 
                 // Menambahkan filter berdasarkan rentang tanggal
                 if (!empty($startDate) && !empty($endDate)) {
@@ -235,7 +239,7 @@
                 <td
                   scope="col"
                 >
-                  <?php echo $row['categories'] ?>
+                  <?php echo $row['name'] ?>
                 </td>
                 <td
                   scope="col"
@@ -294,9 +298,13 @@
                 <label for="category" class="form-label">Kategori</label>
                 <select class="form-select" id="category" name="category">
                   <option value="">Pilih Kategori</option>
-                  <option value="kategori_1">Kategori 1</option>
-                  <option value="kategori_2">Kategori 2</option>
-                  <option value="kategori_3">Kategori 3</option>
+                  <?php
+                  // Query kategori
+                  $kategori_query = mysqli_query($koneksi, "SELECT id, name FROM categories WHERE user_id = '$id_user'");
+                  while($kategori_row = mysqli_fetch_assoc($kategori_query)){
+                  ?>
+                  <option value="<?php echo $kategori_row['id']; ?>"><?php echo $kategori_row['name']; ?></option>
+                  <?php } ?>
                 </select>
               </div>
 

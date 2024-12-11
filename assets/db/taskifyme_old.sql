@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 11 Des 2024 pada 15.08
--- Versi server: 10.4.32-MariaDB
--- Versi PHP: 8.2.12
+-- Generation Time: Nov 30, 2024 at 08:02 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `categories`
+-- Table structure for table `categories`
 --
 
 CREATE TABLE `categories` (
@@ -33,19 +33,10 @@ CREATE TABLE `categories` (
   `name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data untuk tabel `categories`
---
-
-INSERT INTO `categories` (`id`, `user_id`, `name`) VALUES
-(2, 2, 'Tes Kategori Fadil'),
-(3, 3, 'Kuliah'),
-(4, 3, 'Sekolah');
-
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `task`
+-- Table structure for table `task`
 --
 
 CREATE TABLE `task` (
@@ -53,26 +44,16 @@ CREATE TABLE `task` (
   `user_id` int(11) NOT NULL,
   `task_name` varchar(100) NOT NULL,
   `description` text DEFAULT NULL,
-  `status` enum('1','2','3') DEFAULT NULL,
+  `status` enum('Belum Dikerja','Sedang Dikerjakan','Selesai') DEFAULT 'Belum Dikerja',
   `categories` varchar(255) DEFAULT NULL,
   `deadline` date DEFAULT NULL,
-  `priority` enum('1','2','3') DEFAULT NULL
+  `priority` enum('Rendah','Sedang','Tinggi') DEFAULT 'Rendah'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data untuk tabel `task`
---
-
-INSERT INTO `task` (`id`, `user_id`, `task_name`, `description`, `status`, `categories`, `deadline`, `priority`) VALUES
-(3, 2, 'hg', 'uug', '2', '2', '2024-12-12', '1'),
-(5, 3, 'Matematika Diskrit', 'Ujian Akhir Semester', '2', '3', '2024-12-14', '2'),
-(7, 3, 'Pemrograman Web', 'Ujian Akhir Semester', '2', '4', '2024-12-12', '2'),
-(8, 3, 'Inovasi Teknologi', 'Proposal PKM', '2', '3', '2024-12-13', '3');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `user`
+-- Table structure for table `user`
 --
 
 CREATE TABLE `user` (
@@ -88,33 +69,25 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `user`
---
-
-INSERT INTO `user` (`id`, `fullname`, `username`, `birthdate`, `gender`, `email`, `phone`, `password`, `picture`) VALUES
-(2, 'Android', '12', NULL, 'Male', 'android@gmail.com', NULL, '123', NULL),
-(3, 'Muhammad Rahyan Noorfauzan', 'rahyan', NULL, 'Male', 'rahyannn@gmail.com', NULL, '123', NULL);
-
---
 -- Indexes for dumped tables
 --
 
 --
--- Indeks untuk tabel `categories`
+-- Indexes for table `categories`
 --
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `unique_category_per_user` (`user_id`,`name`);
 
 --
--- Indeks untuk tabel `task`
+-- Indexes for table `task`
 --
 ALTER TABLE `task`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indeks untuk tabel `user`
+-- Indexes for table `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
@@ -123,39 +96,39 @@ ALTER TABLE `user`
   ADD UNIQUE KEY `phone` (`phone`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `categories`
+-- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `task`
+-- AUTO_INCREMENT for table `task`
 --
 ALTER TABLE `task`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `user`
+-- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+-- Constraints for dumped tables
 --
 
 --
--- Ketidakleluasaan untuk tabel `categories`
+-- Constraints for table `categories`
 --
 ALTER TABLE `categories`
   ADD CONSTRAINT `categories_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `task`
+-- Constraints for table `task`
 --
 ALTER TABLE `task`
   ADD CONSTRAINT `task_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;

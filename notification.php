@@ -22,19 +22,34 @@ if (!isset($_SESSION['id_user'])) {
 $id_user = $_SESSION['id_user'];
 
 try {
-    // Query untuk mengambil data tugas
-    $sql = "SELECT * FROM task WHERE user_id = $id_user AND deadline <= DATE_ADD(CURDATE(), INTERVAL 5 DAY) AND (status IS NULL OR status != 3)";
+    // Query untuk mengambil tugas yang sudah melewati deadline
+    $overdueSql = "SELECT * FROM task WHERE user_id = $id_user AND deadline < CURDATE() AND (status IS NULL OR status != 3)";
+
+    // Query untuk mengambil tugas yang belum melewati deadline
+    $upcomingSql = "SELECT * FROM task WHERE user_id = $id_user AND deadline >= CURDATE() AND (status IS NULL OR status != 3)";
     
-    // Eksekusi query
-    $result = mysqli_query($koneksi, $sql);
-    
-    if (!$result) {
+    // Eksekusi query untuk tugas yang sudah terlambat
+    $overdueResult = mysqli_query($koneksi, $overdueSql);
+    if (!$overdueResult) {
         throw new Exception("Gagal menjalankan query: " . mysqli_error($koneksi));
     }
 
-    // Ambil semua hasil sebagai array
-    $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    
+    // Eksekusi query untuk tugas yang belum terlambat
+    $upcomingResult = mysqli_query($koneksi, $upcomingSql);
+    if (!$upcomingResult) {
+        throw new Exception("Gagal menjalankan query: " . mysqli_error($koneksi));
+    }
+
+    // Ambil hasil query sebagai array
+    $overdueTasks = mysqli_fetch_all($overdueResult, MYSQLI_ASSOC);
+    $upcomingTasks = mysqli_fetch_all($upcomingResult, MYSQLI_ASSOC);
+
+    // Gabungkan tugas yang terlambat dan yang belum terlambat
+    $tasks = [
+        'overdue' => $overdueTasks,
+        'upcoming' => $upcomingTasks
+    ];
+
     // Kirim JSON
     echo json_encode($tasks);
 } catch (Exception $e) {

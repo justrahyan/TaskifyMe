@@ -99,8 +99,8 @@
               </li>
               <li class="mt-5">
                 <a
-                  href="logout.php"
-                  class="d-flex flex-row align-items-center profile-menu"
+                  href="#"
+                  class="d-flex flex-row align-items-center profile-menu"  data-bs-toggle="modal" data-bs-target="#logoutModal"
                   ><div class="icon-dropdown">
                     <img src="assets/img/icon/log-out-03.png" alt="" />
                   </div>
@@ -115,24 +115,6 @@
 </header>
 
 <!-- Modal notifikasi  -->
-<!-- <div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="notificationModalLabel">Tugas Mendekati Deadline</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <ul id="notification-list" class="list-group">
-                    Daftar tugas akan dimuat di sini
-                    <div class="view_task_data">
-                    </div>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div> -->
-
 <div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -145,6 +127,25 @@
                 <ul id="task-list" class="list-group">
                     
                 </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Konfirmasi Logout -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel">Konfirmasi Logout</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Apakah Anda yakin ingin keluar?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <a href="logout.php" class="btn btn-danger">Keluar</a>
             </div>
         </div>
     </div>
@@ -175,15 +176,29 @@ document.addEventListener('DOMContentLoaded', function() {
                         return;
                     }
 
-                    if (tasks.length === 0) {
+                    // Menampilkan tugas yang terlambat terlebih dahulu
+                    if (tasks.overdue.length > 0) {
+                        tasks.overdue.forEach(function(task) {
+                            taskList.append(`
+                                <li class="list-group-item list-group-item-danger sticky-top">
+                                    <strong>${task.task_name || 'Tugas Tanpa Judul'}</strong>
+                                    <p>${task.description || 'Tidak ada deskripsi'}</p>
+                                    <small>Deadline: ${task.deadline || 'Tidak ada tanggal'}</small>
+                                </li>
+                            `);
+                        });
+                    }
+
+                     // Menampilkan tugas yang belum terlambat
+                    if (tasks.upcoming.length === 0) {
                         taskList.append('<li class="list-group-item">Tidak ada tugas.</li>');
                     } else {
-                        tasks.forEach(function(task) {
+                        tasks.upcoming.forEach(function(task) {
                             taskList.append(`
                                 <li class="list-group-item">
                                     <strong>${task.task_name || 'Tugas Tanpa Judul'}</strong>
                                     <p>${task.description || 'Tidak ada deskripsi'}</p>
-                                    <small>Tenggat: ${task.deadline || 'Tidak ada tanggal'}</small>
+                                    <small>Deadline: ${task.deadline || 'Tidak ada tanggal'}</small>
                                 </li>
                             `);
                         });
