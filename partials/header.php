@@ -176,8 +176,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         return;
                     }
 
+                    let hasTasks = false;
+
                     // Menampilkan tugas yang terlambat terlebih dahulu
                     if (tasks.overdue.length > 0) {
+                        hasTasks = true;
                         tasks.overdue.forEach(function(task) {
                             taskList.append(`
                                 <li class="list-group-item list-group-item-danger sticky-top">
@@ -194,9 +197,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
 
                      // Menampilkan tugas yang belum terlambat
-                    if (tasks.upcoming.length === 0) {
-                        taskList.append('<li class="list-group-item">Tidak ada tugas.</li>');
-                    } else {
+                    if (tasks.upcoming.length > 0) {
+                        hasTasks = true;
                         tasks.upcoming.forEach(function(task) {
                             taskList.append(`
                                 <li class="list-group-item">
@@ -210,6 +212,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </li>
                             `);
                         });
+                    }
+                    
+                    // Jika tidak ada tugas sama sekali
+                    if (!hasTasks) {
+                        taskList.append('<li class="list-group-item">Tidak ada tugas.</li>');
                     }
                 },
                 error: function(xhr, status, error) {
